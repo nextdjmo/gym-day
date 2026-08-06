@@ -236,8 +236,8 @@
   <div class="storage-banner" id="storageBanner">
     <span>⚠️</span>
     <span>
-      <b>Không lưu được tiến độ ở phiên này</b>
-      Bộ nhớ lưu trạng thái (window.storage) chỉ hoạt động khi trang này được mở như một artifact đang chạy trong Claude. Nếu bạn tải file .html này về rồi mở trực tiếp bằng trình duyệt, mọi lượt tích sẽ không được ghi nhớ — đây chính là lý do dấu tích mất khi bạn chọn lại. Hãy mở và dùng trực tiếp trong cuộc trò chuyện Claude để tiến độ được lưu.
+      <b>Không lưu được tiến độ ở trình duyệt này</b>
+      Trình duyệt của bạn đang chặn hoặc không hỗ trợ localStorage (thường gặp ở chế độ ẩn danh/duyệt web riêng tư, hoặc khi chặn cookie/site data nghiêm ngặt). Hãy mở file bằng cửa sổ trình duyệt thường (không ẩn danh) và cho phép lưu dữ liệu trang web để tiến độ được ghi nhớ.
     </span>
   </div>
 
@@ -454,9 +454,17 @@ const storageBannerEl = el('#storageBanner');
 function activeMuscles(){ return PROGRAMS[currentMode]; }
 
 /* ---------------- Storage helpers ----------------
+   This file is meant to be opened directly in a normal browser (double-click
+   / file://, or hosted on a server) — NOT inside Claude's artifact runtime —
+   so it uses the browser's own localStorage rather than window.storage
+   (which only exists inside a live Claude artifact and would silently fail
+   here, which was the original bug: every checkbox toggle looked like it
+   saved, but the write always threw and was swallowed).
+
    All writes are funneled through a single promise chain (saveChain) so that
    rapid clicks can never race each other and overwrite a newer value with an
-   older one — this was the root cause of checkmarks silently disappearing. */
+   older one. */
+const LS_PREFIX = 'sotap:';
 let saveChain = Promise.resolve();
 function queueWrite(fn){
   saveChain = saveChain.then(fn, fn);
@@ -465,14 +473,13 @@ function queueWrite(fn){
 
 async function safeGet(key){
   try{
-    const res = await window.storage.get(key, false);
-    return res ? res.value : null;
-  }catch(e){ return null; }
+    const v = window.localStorage.getItem(LS_PREFIX + key);
+    return v === null ? null : v;
+  }catch(e){ markStorageBroken(); return null; }
 }
 async function safeSet(key, value){
   try{
-    const res = await window.storage.set(key, value, false);
-    if(!res) throw new Error('null result');
+    window.localStorage.setItem(LS_PREFIX + key, value);
     return true;
   }catch(e){
     console.error('Storage set failed', key, e);
@@ -488,15 +495,16 @@ function markStorageBroken(){
 }
 
 async function testStorage(){
-  if(!window.storage || typeof window.storage.set !== 'function'){
+  if(!window.localStorage){
     markStorageBroken();
     return;
   }
   try{
     const probe = String(Date.now());
-    await window.storage.set('__probe__', probe, false);
-    const res = await window.storage.get('__probe__', false);
-    if(!res || res.value !== probe) throw new Error('roundtrip mismatch');
+    window.localStorage.setItem(LS_PREFIX + '__probe__', probe);
+    const back = window.localStorage.getItem(LS_PREFIX + '__probe__');
+    if(back !== probe) throw new Error('roundtrip mismatch');
+    window.localStorage.removeItem(LS_PREFIX + '__probe__');
   }catch(e){
     markStorageBroken();
   }
