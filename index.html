@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Sổ Tập — Nhật Ký Buổi Tập</title>
+<title>Sổ Tập — Theo Nhóm Cơ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -21,6 +21,7 @@
     --teal: #4FB6A6;
     --teal-dim: #1D3B37;
     --danger: #E0684F;
+    --danger-dim: #3A241E;
     --radius: 14px;
   }
   *{ box-sizing: border-box; }
@@ -57,6 +58,16 @@
     padding: 8px 14px; display:flex; align-items:center; gap:8px; white-space:nowrap;
   }
   .stat-pill b{ color: var(--amber); font-weight:600; }
+
+  /* ---------- Storage warning ---------- */
+  .storage-banner{
+    display:none; align-items:flex-start; gap:10px;
+    font-size: 13px; line-height:1.5; color: var(--danger);
+    background: var(--danger-dim); border: 1px solid #6b3a2e; border-radius: 10px;
+    padding: 12px 14px; margin-bottom: 18px;
+  }
+  .storage-banner.show{ display:flex; }
+  .storage-banner b{ display:block; margin-bottom:2px; color: #F3B7A5; }
 
   /* ---------- Mode toggle ---------- */
   .mode-row{ display:flex; align-items:center; gap:10px; margin-bottom: 16px; flex-wrap: wrap; }
@@ -97,22 +108,21 @@
   }
   .today-btn:hover{ color: var(--ink); border-color: var(--ink-dim); }
 
-  /* ---------- Day tabs ---------- */
+  /* ---------- Muscle tabs ---------- */
   .tabs{
-    display:grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 22px;
+    display:grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-bottom: 22px;
   }
   .tab{
-    font-family:'Oswald', sans-serif; font-size: 13px; letter-spacing:.02em;
+    font-family:'Oswald', sans-serif; font-size: 13.5px; letter-spacing:.02em;
     background: var(--surface); border:1px solid var(--line); border-radius: 10px;
-    padding: 10px 4px 8px; text-align:center; cursor:pointer; color: var(--ink-dim);
+    padding: 12px 4px 10px; text-align:center; cursor:pointer; color: var(--ink-dim);
     transition: border-color .15s, color .15s, background .15s;
   }
-  .tab .n{ display:block; font-size: 18px; font-weight:700; color: inherit; }
+  .tab .icon{ display:block; font-size: 18px; margin-bottom:2px; }
   .tab:hover{ border-color: var(--ink-dim); color: var(--ink); }
   .tab.active{ border-color: var(--amber); background: var(--amber-dim); color: var(--amber); }
   body[data-mode="home"] .tab.active{ border-color: var(--teal); background: var(--teal-dim); color: var(--teal); }
-  .tab.done .n::after{ content:" ✓"; }
-  .tab.rest{ opacity:.75; }
+  .tab.done .label::after{ content:" ✓"; }
 
   /* ---------- Day card ---------- */
   .card{
@@ -166,7 +176,6 @@
     font-family:'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing:.03em;
     padding: 2px 7px; border-radius:5px; text-transform:uppercase; white-space:nowrap;
   }
-  .badge.back{ background: var(--teal-dim); color: var(--teal); border:1px solid #285249; }
   .badge.equip{ background: var(--surface-2); color: var(--ink-dim); border:1px solid var(--line); }
   .ex-meta{
     font-family:'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink-dim);
@@ -193,10 +202,6 @@
   .tick.full{ background: var(--amber); border-color: var(--amber); }
   .tick.full.home{ background: var(--teal); border-color: var(--teal); }
   .tick.partial.home{ background: linear-gradient(180deg, var(--teal-dim), var(--surface-2)); border-color:#285249; }
-  .tick .lbl{
-    position:absolute; bottom:-16px; left:50%; transform:translateX(-50%);
-    font-family:'IBM Plex Mono', monospace; font-size: 9px; color: var(--ink-faint); white-space:nowrap;
-  }
   .strip-wrap{ padding-bottom: 20px; }
 
   .reset-btn{
@@ -205,14 +210,13 @@
   }
   .reset-btn:hover{ color: var(--danger); }
 
-  .loading, .storage-error{
+  .loading, .save-hint{
     font-family:'IBM Plex Mono', monospace; font-size:12.5px; color: var(--ink-dim);
     padding: 10px 0;
   }
-  .storage-error{ color: var(--danger); }
 
   @media (max-width: 640px){
-    .tabs{ grid-template-columns: repeat(4, 1fr); }
+    .tabs{ grid-template-columns: repeat(3, 1fr); }
     h1{ font-size: 22px; }
     .strip{ grid-template-columns: repeat(7, 1fr); row-gap: 22px; }
   }
@@ -223,11 +227,19 @@
 
   <header class="top">
     <div>
-      <p class="brand-eyebrow">Nhật ký buổi tập · 6 ngày/tuần</p>
+      <p class="brand-eyebrow">Nhật ký buổi tập · Theo nhóm cơ</p>
       <h1>Sổ Tập Của Bạn</h1>
     </div>
     <div class="stat-pill">1m68 · 67kg · BMI <b>23.7</b></div>
   </header>
+
+  <div class="storage-banner" id="storageBanner">
+    <span>⚠️</span>
+    <span>
+      <b>Không lưu được tiến độ ở phiên này</b>
+      Bộ nhớ lưu trạng thái (window.storage) chỉ hoạt động khi trang này được mở như một artifact đang chạy trong Claude. Nếu bạn tải file .html này về rồi mở trực tiếp bằng trình duyệt, mọi lượt tích sẽ không được ghi nhớ — đây chính là lý do dấu tích mất khi bạn chọn lại. Hãy mở và dùng trực tiếp trong cuộc trò chuyện Claude để tiến độ được lưu.
+    </span>
+  </div>
 
   <div class="mode-row">
     <div class="mode-toggle" id="modeToggle">
@@ -263,7 +275,7 @@
     <div id="footerNote"></div>
     <div id="loadingMsg" class="loading">Đang tải trạng thái...</div>
     <ul class="ex-list" id="exList"></ul>
-    <button class="reset-btn" id="resetBtn">Bỏ chọn tất cả cho ngày này</button>
+    <button class="reset-btn" id="resetBtn">Bỏ chọn tất cả cho nhóm cơ này</button>
   </div>
 
   <section class="habit-section">
@@ -279,138 +291,135 @@
 </div>
 
 <script>
-/* ---------------- Data ---------------- */
-const MS = "https://www.muscleandstrength.com/exercises/";
+/* ================== Data: workouts grouped by single muscle ================== */
+function ytLink(enName){
+  return "https://www.youtube.com/results?search_query=" + encodeURIComponent(enName + " exercise tutorial");
+}
 
-/* ============ GYM PROGRAM ============ */
-const GYM_DAYS = [
-  { id:1, short:"Ngày 1", title:"Đẩy A — Ngực trọng tâm", focus:"Push A · Nén nặng trước, isolation sau, RPE 8-9 ở compound", rest:false,
+/* ============ GYM — full equipment, isolated by muscle ============ */
+const GYM_MUSCLES = [
+  { id:1, key:"tay", short:"Tay", icon:"💪", title:"Tay — Tay trước + Tay sau", focus:"Biceps & Triceps · Cô lập hoàn toàn tay, không mượn lực vai/ngực",
     exercises:[
-      {name:"Đẩy ngực thanh đòn (Barbell Bench Press)", reps:"5-6 x4, +6-8 x1 (pyramid)", sets:5, link:MS+"barbell-bench-press.html", note:"Bài chính trong ngày — tăng tạ mỗi khi đạt đủ rep ở mọi set. Nghỉ 2-3 phút giữa set.", tag:null},
-      {name:"Đẩy ngực nghiêng tạ đơn (Incline Dumbbell Press)", reps:"8-10", sets:4, link:MS+"incline-dumbbell-bench-press.html", note:"Ghế nghiêng 30 độ, hạ sâu hết biên độ để kéo giãn phần ngực trên.", tag:null},
-      {name:"Dips ngực (Weighted Chest Dip)", reps:"8-12", sets:3, link:MS+"dips-chest-version.html", note:"Ngả người ra trước, khuỷu tay mở rộng để nhắm vào ngực dưới. Đeo thêm đĩa tạ nếu tự trọng đã dễ.", tag:null},
-      {name:"Ép ngực cáp thấp lên cao (Low-to-High Cable Fly)", reps:"12-15", sets:3, link:MS+"cable-crossovers.html", note:"Set cuối làm dropset: hết rep thì giảm 30% tạ, làm tiếp đến thất bại.", tag:null},
-      {name:"Đẩy tay sau cáp thừng (Rope Overhead Extension)", reps:"10-12", sets:3, link:MS+"tricep-extension.html", note:"Kéo giãn tối đa phía sau đầu, siết chặt ở điểm duỗi thẳng.", tag:null},
-      {name:"Đẩy tay sau cáp (Tricep Pushdown)", reps:"12-15 + dropset", sets:3, link:MS+"tricep-extension.html", note:"Set cuối rest-pause: tập đến gần thất bại, nghỉ 15s, làm thêm 4-6 rep.", tag:null},
+      {name:"Cuốn tay trước thanh đòn EZ (EZ-Bar Curl)", en:"EZ bar curl", reps:"8-10", sets:4, note:"Kiểm soát pha hạ 3 giây, không đung đưa người tạo đà."},
+      {name:"Đẩy tay sau cáp thừng (Rope Pushdown)", en:"rope tricep pushdown", reps:"10-12", sets:4, note:"Khuỷu tay ép sát người, chỉ cẳng tay di chuyển."},
+      {name:"Cuốn tạ đơn nghiêng ghế (Incline Dumbbell Curl)", en:"incline dumbbell curl", reps:"10-12", sets:3, note:"Ghế nghiêng 45-60 độ để kéo giãn tay trước tối đa ở đáy."},
+      {name:"Skull Crusher thanh đòn EZ (Lying Tricep Extension)", en:"skull crusher lying tricep extension", reps:"10-12", sets:3, note:"Hạ thanh về phía trán/sau đầu, giữ khuỷu cố định suốt bài."},
+      {name:"Cuốn tay trước cáp đứng (Standing Cable Curl)", en:"standing cable curl", reps:"12-15", sets:3, note:"Cáp giữ căng cơ liên tục — không có điểm nghỉ như tạ tự do."},
+      {name:"Đẩy tay sau overhead cáp một tay (Overhead Cable Extension)", en:"overhead cable tricep extension", reps:"12-15", sets:3, note:"Kéo giãn đầu dài tricep phía sau đầu, siết chặt khi duỗi thẳng."},
+      {name:"Cuốn tạ đơn kiểu búa (Hammer Curl)", en:"hammer curl", reps:"12", sets:3, note:"Cầm tạ theo chiều dọc — nhắm cả cẳng tay và đầu ngoài tay trước."},
     ]},
-  { id:2, short:"Ngày 2", title:"Kéo A — Lưng rộng", focus:"Pull A · Ưu tiên độ rộng lưng (V-taper) + tay trước", rest:false,
+  { id:2, key:"vai", short:"Vai", icon:"🏔️", title:"Vai — Toàn diện 3 đầu delt", focus:"Shoulders · Trước – giữa – sau, không để ngực/lưng gánh bù",
     exercises:[
-      {name:"Kéo xà có tạ (Weighted Pull-up)", reps:"6-8", sets:4, link:MS+"wide-grip-pull-up.html", note:"Đeo thêm tạ khi kéo tự trọng quá 10 rep dễ dàng. Kéo vai xuống trước khi gập khuỷu.", tag:"back"},
-      {name:"Kéo xô tay rộng (Wide-Grip Lat Pulldown)", reps:"10-12", sets:4, link:MS+"lat-pulldown.html", note:"Ưỡn ngực nhẹ, kéo thanh về xương ức, tập trung siết lưng xô chứ không dùng tay.", tag:"back"},
-      {name:"Kéo cáp tay thẳng (Straight-Arm Pulldown)", reps:"12-15", sets:3, link:MS+"straight-arm-pulldown.html", note:"Bài cô lập lưng xô, giữ tay gần như thẳng suốt chuyển động.", tag:"back"},
-      {name:"Chèo cáp ngồi tay rộng (Wide Seated Cable Row)", reps:"12", sets:3, link:MS+"seated-row.html", note:"Kéo khuỷu tay ra ngoài để nhấn vào lưng giữa/xô thay vì lưng dày.", tag:"back"},
-      {name:"Cuốn tay trước thanh đòn EZ (EZ-Bar Curl)", reps:"8-10", sets:4, link:MS+"standing-barbell-curl.html", note:"Kiểm soát pha hạ 3 giây, không đung đưa người tạo đà.", tag:null},
-      {name:"Cuốn tạ đơn nghiêng ghế (Incline Dumbbell Curl)", reps:"10-12 + dropset", sets:3, link:MS+"incline-dumbbell-curl.html", note:"Ghế nghiêng kéo giãn tay trước tối đa, set cuối làm dropset.", tag:null},
+      {name:"Đẩy vai tạ đòn đứng (Standing Barbell Overhead Press)", en:"standing barbell overhead press", reps:"6-8", sets:4, note:"Bài chính — siết bụng, không ưỡn lưng dưới quá mức khi đẩy lên."},
+      {name:"Đẩy vai tạ đơn ngồi (Seated Dumbbell Shoulder Press)", en:"seated dumbbell shoulder press", reps:"8-10", sets:3, note:"Lưng tựa ghế thẳng, hạ tạ đến ngang tai."},
+      {name:"Nâng tạ ngang vai (Dumbbell Lateral Raise)", en:"dumbbell lateral raise", reps:"12-15", sets:4, note:"Nâng đến ngang vai, hơi nghiêng người về trước để tránh mượn lực traps."},
+      {name:"Nâng tạ trước vai (Front Raise)", en:"dumbbell front raise", reps:"12", sets:3, note:"Nâng luân phiên hoặc cùng lúc, không vung tạ tạo quán tính."},
+      {name:"Chim xoè cáp mặt (Cable Face Pull)", en:"cable face pull", reps:"15", sets:4, note:"Kéo dây về phía mặt, xoay ngoài vai ở cuối chuyển động — vai sau + xoay vai."},
+      {name:"Nâng vai sau máy/tạ đơn cúi người (Rear Delt Fly)", en:"rear delt fly", reps:"12-15", sets:3, note:"Cúi người song song sàn, siết bả vai khi nâng tạ ra hai bên."},
+      {name:"Shrug tạ đòn (Barbell Shrug)", en:"barbell shrug", reps:"12-15", sets:3, note:"Nhấc vai thẳng lên (không xoay tròn), giữ đỉnh 1 giây."},
     ]},
-  { id:3, short:"Ngày 3", title:"Chân A — Đùi trước", focus:"Legs A · Trọng tâm tứ đầu đùi + bắp chân tần suất cao", rest:false,
+  { id:3, key:"chan", short:"Chân", icon:"🦵", title:"Chân — Đùi trước, đùi sau, bắp chân", focus:"Legs · Bài đa khớp nặng trước, cô lập sau",
     exercises:[
-      {name:"Squat thanh đòn (Barbell Back Squat)", reps:"5x5 nặng, +8-10 x1", sets:6, link:MS+"squat.html", note:"Bài chính của buổi — tăng tạ dần theo tuần, hạ đến khi đùi song song hoặc thấp hơn.", tag:null},
-      {name:"Đẩy chân máy chân hẹp (Close-Stance Leg Press)", reps:"10-12", sets:4, link:MS+"45-degree-leg-press.html", note:"Đặt chân thấp và hẹp trên bệ để nhấn vào tứ đầu đùi.", tag:null},
-      {name:"Hack Squat hoặc Duỗi chân máy (Leg Extension)", reps:"12-15 + dropset", sets:4, link:MS+"leg-extension.html", note:"Set cuối dropset: giảm tạ 30%, làm tiếp đến thất bại thực sự.", tag:null},
-      {name:"Lunges bước dài tạ đơn (Walking Dumbbell Lunge)", reps:"12/chân", sets:3, link:MS+"dumbbell-lunge.html", note:"Bước dài vừa phải, đầu gối trước không vượt quá mũi chân.", tag:null},
-      {name:"Nâng bắp chân đứng (Standing Calf Raise)", reps:"12-15", sets:5, link:MS+"standing-calf-raise.html", note:"Nâng gót cao hết mức, giữ 1 giây ở đỉnh, hạ chậm kéo giãn sâu.", tag:null},
+      {name:"Squat thanh đòn (Barbell Back Squat)", en:"barbell back squat", reps:"5x5 nặng", sets:5, note:"Bài chính — tăng tạ dần theo tuần, hạ đến khi đùi song song hoặc thấp hơn."},
+      {name:"Đẩy chân máy (Leg Press)", en:"leg press", reps:"10-12", sets:4, note:"Đặt chân rộng trung bình trên bệ, không khoá gối ở điểm duỗi."},
+      {name:"Romanian Deadlift tạ đòn (RDL)", en:"romanian deadlift", reps:"8-10", sets:3, note:"Đẩy hông ra sau, giữ lưng thẳng, cảm nhận căng gân kheo."},
+      {name:"Duỗi chân máy (Leg Extension)", en:"leg extension machine", reps:"12-15 + dropset", sets:3, note:"Set cuối dropset: giảm 30% tạ, làm tiếp đến gần thất bại."},
+      {name:"Gập gối máy (Leg Curl)", en:"lying leg curl machine", reps:"10-12", sets:4, note:"Cô lập gân kheo — hạ chậm 3 giây để tăng thời gian chịu lực."},
+      {name:"Lunges bước dài tạ đơn (Walking Dumbbell Lunge)", en:"walking dumbbell lunge", reps:"12/chân", sets:3, note:"Bước dài vừa phải, đầu gối trước không vượt quá mũi chân."},
+      {name:"Nâng bắp chân đứng (Standing Calf Raise)", en:"standing calf raise", reps:"12-15", sets:5, note:"Nâng gót cao hết mức, giữ 1 giây ở đỉnh, hạ chậm kéo giãn sâu."},
     ]},
-  { id:4, short:"Ngày 4", title:"Đẩy B — Vai trọng tâm", focus:"Push B · Ưu tiên 3 đầu vai để tạo độ tròn + tay sau bổ trợ", rest:false,
+  { id:4, key:"mong", short:"Mông", icon:"🍑", title:"Mông — Glute trọng tâm", focus:"Glutes · Ưu tiên biên độ hông đầy đủ và siết đỉnh",
     exercises:[
-      {name:"Đẩy vai đứng thanh đòn (Standing Military Press)", reps:"6-8", sets:4, link:MS+"military-press.html", note:"Bài chính vai — siết bụng mông chắc để tránh ưỡn lưng dưới.", tag:null},
-      {name:"Đẩy vai tạ đơn ngồi (Seated Dumbbell Press)", reps:"8-10", sets:3, link:MS+"seated-dumbbell-press.html", note:"Biên độ đầy đủ, không khóa cứng khuỷu ở điểm cuối.", tag:null},
-      {name:"Nâng tạ ngang vai (Lateral Raise)", reps:"12-15 + dropset", sets:4, link:MS+"dumbbell-lateral-raise.html", note:"Bài quan trọng nhất để mở rộng vai — nghiêng người nhẹ, nâng đến ngang vai, set cuối dropset.", tag:null},
-      {name:"Nâng tạ ngang vai cáp (Cable Lateral Raise)", reps:"15", sets:3, link:MS+"cable-lateral-raise.html", note:"Cáp giữ căng cơ liên tục suốt biên độ, khác với tạ đơn.", tag:null},
-      {name:"Face Pull / Bay vai sau (Rear Delt Fly)", reps:"15", sets:4, link:MS+"cable-face-pull", note:"Ưu tiên vai sau để cân đối 3 đầu, tránh mất cân bằng vai trước quá phát triển.", tag:"back"},
-      {name:"Đẩy ngực tay hẹp (Close-Grip Bench Press)", reps:"8-10", sets:3, link:MS+"close-grip-bench-press.html", note:"Bài phụ cho tay sau, tay đặt hẹp hơn vai một chút, khuỷu ép sát thân.", tag:null},
+      {name:"Hip Thrust tạ đòn (Barbell Hip Thrust)", en:"barbell hip thrust", reps:"8-10", sets:4, note:"Bài chính — vai gác ghế, đẩy hông lên tối đa, siết mông 1-2s ở đỉnh."},
+      {name:"Romanian Deadlift tạ đơn (Dumbbell RDL)", en:"dumbbell romanian deadlift", reps:"10-12", sets:3, note:"Gập hông sâu để kéo giãn mông/gân kheo trước khi đứng thẳng."},
+      {name:"Cable Glute Kickback", en:"cable glute kickback", reps:"12-15/bên", sets:3, note:"Đá chân ra sau bằng lực mông, không ưỡn lưng dưới bù trừ."},
+      {name:"Bulgarian Split Squat tạ đơn", en:"bulgarian split squat", reps:"10-12/chân", sets:3, note:"Chân sau gác lên ghế, đẩy người lên chủ yếu bằng gót chân trước."},
+      {name:"Hip Abduction máy đùi (Hip Abduction Machine)", en:"hip abduction machine", reps:"15", sets:3, note:"Nhắm mông trung — mở đùi ra chống lại kháng lực, kiểm soát cả pha đóng."},
+      {name:"Sumo Squat tạ đơn (Sumo Dumbbell Squat)", en:"sumo dumbbell squat", reps:"12", sets:3, note:"Chân rộng, mũi chân xoay ngoài — nhắm mông nhiều hơn squat thường."},
+      {name:"Glute Bridge tạ đòn giữ đỉnh (Barbell Glute Bridge Hold)", en:"barbell glute bridge", reps:"15 + giữ 2s đỉnh", sets:3, note:"Bài finisher — siết chặt mông ở đỉnh mỗi rep."},
     ]},
-  { id:5, short:"Ngày 5", title:"Kéo B — Lưng dày + Core", focus:"Pull B · Trọng tâm độ dày lưng (thickness) + bụng", rest:false,
+  { id:5, key:"lung", short:"Lưng", icon:"🔺", title:"Lưng — Độ rộng + độ dày", focus:"Back · Kéo dọc cho độ rộng, kéo ngang cho độ dày",
     exercises:[
-      {name:"Deadlift", reps:"5x5 nặng, kỹ thuật chuẩn", sets:5, link:MS+"deadlifts.html", note:"Bài chính — đứng lên bằng lực hông, giữ lưng thẳng tự nhiên suốt biên độ.", tag:"back"},
-      {name:"Chèo thanh đòn (Barbell Row)", reps:"8-10", sets:4, link:MS+"bent-over-barbell-row.html", note:"Thân nghiêng 45 độ, kéo thanh về rốn để nhắm lưng giữa/dày.", tag:"back"},
-      {name:"Chèo T-Bar hoặc máy tựa ngực (Chest-Supported Row)", reps:"10-12", sets:3, link:MS+"t-bar-row.html", note:"Tựa ngực giúp cô lập lưng, loại bỏ đà từ thân dưới.", tag:"back"},
-      {name:"Kéo cáp ngồi tay hẹp (Close-Grip Seated Row)", reps:"12 + dropset", sets:3, link:MS+"seated-row.html", note:"Tay hẹp nhấn vào lưng giữa, set cuối dropset.", tag:"back"},
-      {name:"Cuốn tay trước Preacher (Preacher Curl)", reps:"8-10", sets:3, link:MS+"preacher-curl.html", note:"Ghế preacher cố định khuỷu, tránh gian lận bằng đà vai.", tag:null},
-      {name:"Nâng chân treo (Hanging Leg Raise)", reps:"12-15", sets:3, link:MS+"hanging-leg-raise.html", note:"Nâng chân bằng lực bụng dưới, không đung đưa thân người.", tag:"back"},
-      {name:"Gập bụng chéo (Cable Woodchopper / Russian Twist)", reps:"15/bên", sets:3, link:MS+"russian-twist.html", note:"Xoay có kiểm soát từ thân trên, giữ hông cố định.", tag:"back"},
+      {name:"Kéo xà có tạ (Weighted Pull-up)", en:"weighted pull up", reps:"6-8", sets:4, note:"Đeo thêm tạ khi kéo tự trọng quá 10 rep dễ dàng. Kéo vai xuống trước khi gập khuỷu."},
+      {name:"Chèo tạ đòn (Barbell Row)", en:"barbell row", reps:"8-10", sets:4, note:"Thân nghiêng ~45 độ, kéo thanh về bụng dưới, giữ lưng thẳng suốt bài."},
+      {name:"Kéo xô tay rộng (Wide-Grip Lat Pulldown)", en:"wide grip lat pulldown", reps:"10-12", sets:3, note:"Ưỡn ngực nhẹ, kéo thanh về xương ức, siết lưng xô chứ không dùng tay."},
+      {name:"Chèo tạ đơn một tay (One-Arm Dumbbell Row)", en:"one arm dumbbell row", reps:"10-12/bên", sets:3, note:"Gối và tay còn lại tựa ghế, kéo khuỷu tay lên cao sát hông."},
+      {name:"Kéo cáp tay thẳng (Straight-Arm Pulldown)", en:"straight arm pulldown", reps:"12-15", sets:3, note:"Bài cô lập lưng xô, giữ tay gần như thẳng suốt chuyển động."},
+      {name:"Chèo cáp ngồi tay rộng (Wide Seated Cable Row)", en:"seated cable row wide grip", reps:"12", sets:3, note:"Kéo khuỷu tay ra ngoài để nhấn vào lưng giữa thay vì lưng dày."},
+      {name:"Hyperextension lưng dưới (Back Extension)", en:"back extension hyperextension", reps:"15", sets:3, note:"Bài finisher cho lưng dưới — không ưỡn quá mức ở đỉnh."},
     ]},
-  { id:6, short:"Ngày 6", title:"Chân B — Đùi sau + Mông", focus:"Legs B · Trọng tâm chuỗi sau (hamstring, mông) — quyết định độ dày vòng 3", rest:false,
+  { id:6, key:"nguc", short:"Ngực", icon:"🛡️", title:"Ngực — Trên, giữa, dưới", focus:"Chest · Nén nặng trước, isolation sau để hoàn thiện hình dạng",
     exercises:[
-      {name:"Romanian Deadlift (RDL)", reps:"8-10", sets:4, link:MS+"romanian-deadlift", note:"Gập ở hông, cảm nhận căng sâu ở gân kheo, đầu gối chỉ hơi khuỵu.", tag:"back"},
-      {name:"Đá đùi sau máy (Lying/Seated Leg Curl)", reps:"10-12 + dropset", sets:4, link:MS+"leg-curl.html", note:"Kiểm soát tốc độ cả hai chiều, set cuối dropset để tận dụng mệt mỏi.", tag:null},
-      {name:"Hip Thrust", reps:"8-10", sets:4, link:MS+"barbell-hip-thrust.html", note:"Siết mông ở đỉnh chuyển động 1-2 giây, không ưỡn lưng dưới quá mức.", tag:null},
-      {name:"Bulgarian Split Squat", reps:"10/chân", sets:3, link:MS+"bulgarian-split-squat.html", note:"Chân sau đặt trên ghế, tập trung dồn lực vào chân trước.", tag:null},
-      {name:"Nâng bắp chân ngồi (Seated Calf Raise)", reps:"15-20", sets:4, link:MS+"seated-calf-raise.html", note:"Bài này nhắm cơ dép (soleus) — bổ sung cho bắp chân đứng ở ngày chân A.", tag:null},
-    ]},
-  { id:7, short:"Ngày 7", title:"Nghỉ hoàn toàn", focus:"Không tập luyện, phục hồi hoàn toàn để cơ bắp phát triển", rest:true,
-    exercises:[
-      {name:"Nghỉ hoàn toàn", reps:"-", sets:0, link:null, note:"Ngủ đủ 7-9 tiếng, ăn đủ protein (1.6-2.2g/kg thể trọng) và tổng calo dư nhẹ để tăng cơ. Có thể đi bộ nhẹ hoặc giãn cơ 15-20 phút nếu muốn.", tag:null},
+      {name:"Đẩy ngực thanh đòn (Barbell Bench Press)", en:"barbell bench press", reps:"6-8", sets:4, note:"Bài chính — tăng tạ mỗi khi đạt đủ rep ở mọi set. Nghỉ 2-3 phút giữa set."},
+      {name:"Đẩy ngực nghiêng tạ đơn (Incline Dumbbell Press)", en:"incline dumbbell press", reps:"8-10", sets:4, note:"Ghế nghiêng 30 độ, hạ sâu hết biên độ để nhắm ngực trên."},
+      {name:"Đẩy ngực dốc xuống tạ đơn (Decline Dumbbell Press)", en:"decline dumbbell press", reps:"10-12", sets:3, note:"Nhắm ngực dưới — hạ tạ chậm, ép chặt ở đỉnh."},
+      {name:"Dips ngực (Weighted Chest Dip)", en:"weighted chest dip", reps:"8-12", sets:3, note:"Ngả người ra trước, khuỷu tay mở rộng để nhắm vào ngực dưới."},
+      {name:"Ép ngực máy (Pec Deck / Machine Fly)", en:"pec deck machine fly", reps:"12-15", sets:3, note:"Siết chặt giữa ngực ở điểm khép tay, kiểm soát pha mở."},
+      {name:"Ép ngực cáp thấp lên cao (Low-to-High Cable Fly)", en:"low to high cable fly", reps:"12-15 + dropset", sets:3, note:"Set cuối dropset: hết rep thì giảm 30% tạ, làm tiếp đến thất bại."},
     ]},
 ];
 
-/* ============ HOME PROGRAM — chỉ xà đơn + con lăn bụng + tự trọng ============ */
-const HOME_DAYS = [
-  { id:1, short:"Ngày 1", title:"Đẩy A — Ngực (tại nhà)", focus:"Push A · Tự trọng — đổi góc tay/độ nghiêng để tăng độ khó thay vì tăng tạ", rest:false,
-    footer:"Không có tạ: tăng độ khó bằng cách chậm nhịp độ (3-4s xuống), nâng chân lên cao, hoặc thêm rep/set.",
+/* ============ HOME — bodyweight + xà đơn + con lăn bụng, isolated by muscle ============ */
+const HOME_MUSCLES = [
+  { id:1, key:"tay", short:"Tay", icon:"💪", title:"Tay — Tay trước + Tay sau (tại nhà)", focus:"Biceps & Triceps · Tự trọng + xà đơn thay tạ",
+    footer:"Không có tạ rời cho tay: dùng nhịp độ chậm và giữ đẳng trường để tăng độ khó thay vì tăng cân nặng.",
     exercises:[
-      {name:"Hít đất chân cao (Decline Push-up)", reps:"12-15", sets:4, link:MS+"decline-push-up.html", note:"Gác chân lên ghế/giường, tay chống sàn — nhắm ngực trên thay cho incline press.", tag:null, equip:"Tự trọng"},
-      {name:"Hít đất tiêu chuẩn (Standard Push-up)", reps:"15-20", sets:4, link:MS+"pushups.html", note:"Bài chính thay bench press — siết bụng, hạ ngực sát sàn, kiểm soát nhịp độ.", tag:null, equip:"Tự trọng"},
-      {name:"Hít đất rộng tay (Wide Push-up)", reps:"12-15", sets:3, link:MS+"pushups.html", note:"Tay đặt rộng hơn vai để kéo giãn ngực ngoài, thay cho cable fly.", tag:null, equip:"Tự trọng"},
-      {name:"Hít đất kim cương (Diamond Push-up)", reps:"10-12 + dropset (về hít đất thường)", sets:3, link:MS+"diamond-push-up.html", note:"Hai tay chụm hình kim cương dưới ngực — dồn lực vào tay sau. Hết sức thì chuyển ngay sang hít đất tay rộng để làm dropset.", tag:null, equip:"Tự trọng"},
-      {name:"Hít đất Pike (Pike Push-up)", reps:"10-12", sets:3, link:MS+"pike-push-up.html", note:"Gập người hình chữ V, đẩy đỉnh đầu xuống sàn — thay thế bài vai/tay sau bổ trợ.", tag:null, equip:"Tự trọng"},
-      {name:"Plank chống đẩy tay sau (Tricep Dip Plank Hold)", reps:"Giữ 30-45s", sets:3, link:MS+"triceps-dips.html", note:"Nếu có mép ghế/bậc thềm chắc chắn có thể dùng để dip tay sau; nếu không, giữ plank khuỷu gập 90 độ luân phiên.", tag:null, equip:"Tự trọng"},
+      {name:"Hít đất kim cương (Diamond Push-up)", en:"diamond push up", reps:"12-15", sets:4, equip:"Tự trọng", note:"Hai bàn tay chụm hình kim cương dưới ngực — nhắm tay sau."},
+      {name:"Dips ghế (Chair/Bench Dip)", en:"bench dip tricep", reps:"12-15", sets:3, equip:"Ghế/bàn", note:"Gót chân đặt xa để tăng khó, hạ khuỷu vuông góc rồi đẩy lên."},
+      {name:"Kéo xà cầm ngược — Chin-up", en:"chin up close grip", reps:"Tối đa rep sạch x4", sets:4, equip:"Xà đơn", note:"Cầm sấp ngược, hẹp vai — nhắm tay trước nhiều hơn kéo xà thường."},
+      {name:"Plank hạ khuỷu tay sau (Tricep Plank Hold)", en:"tricep plank hold", reps:"Giữ 30-40s", sets:3, equip:"Tự trọng", note:"Plank ở tư thế khuỷu gập 90 độ, siết chặt tay sau suốt hiệp."},
+      {name:"Cuốn tay trước đẳng trường với balo (Static Curl Hold)", en:"isometric bicep curl hold", reps:"Giữ 25-30s", sets:3, equip:"Balo/túi nặng", note:"Giữ khuỷu 90 độ có tải, căng cơ liên tục không nghỉ giữa hiệp."},
+      {name:"Hít đất nổ lực/vỗ tay (Explosive Push-up)", en:"explosive clap push up", reps:"6-8", sets:3, equip:"Tự trọng", note:"Đẩy người bật khỏi sàn — tăng cường sức mạnh tay sau bùng nổ."},
     ]},
-  { id:2, short:"Ngày 2", title:"Kéo A — Lưng rộng (tại nhà)", focus:"Pull A · Xà đơn là vua — ưu tiên biên độ đầy đủ hơn số rep", rest:false,
-    footer:"Xà đơn không có tạ thêm: khi rep dễ dàng > 10-12, làm chậm pha hạ (negative) 4-5s để tăng khó.",
+  { id:2, key:"vai", short:"Vai", icon:"🏔️", title:"Vai — Toàn diện (tại nhà)", focus:"Shoulders · Pike push-up thay overhead press",
     exercises:[
-      {name:"Kéo xà tay rộng (Wide-Grip Pull-up)", reps:"Tối đa rep sạch x4 set", sets:4, link:MS+"wide-grip-pull-up.html", note:"Bài chính thay cho pull-up có tạ — kéo vai xuống trước, lên đến khi cằm qua xà.", tag:"back", equip:"Xà đơn"},
-      {name:"Kéo xà ngửa tay (Chin-up)", reps:"Tối đa rep sạch x3 set", sets:3, link:MS+"chin-up.html", note:"Tay ngửa hẹp hơn vai — nhấn nhiều vào lưng xô dưới + tay trước, thay cho lat pulldown.", tag:"back", equip:"Xà đơn"},
-      {name:"Kéo xà âm — Negative Pull-up", reps:"5-6 x hạ chậm 5s", sets:3, link:MS+"negative-pull-up.html", note:"Nhảy/bước lên vị trí cằm qua xà, hạ xuống thật chậm — thay cho straight-arm pulldown để tăng thời gian chịu tải lưng xô.", tag:"back", equip:"Xà đơn"},
-      {name:"Treo xà co vai (Scapular Pull-up / Dead Hang Row)", reps:"10-12", sets:3, link:MS+"scapular-pull-up.html", note:"Treo người, chỉ nhô vai lên xuống không gập khuỷu — kích hoạt lưng giữa, thay cho seated cable row.", tag:"back", equip:"Xà đơn"},
-      {name:"Gập tay trước đẳng trường trên xà (Isometric Curl Hold)", reps:"Giữ góc 90° x 20-30s", sets:3, link:MS+"chin-up.html", note:"Treo ở vị trí giữa chin-up, giữ khuỷu 90 độ — thay thế bài cuốn tay trước không tạ.", tag:null, equip:"Xà đơn"},
-      {name:"Con lăn bụng (Ab Wheel Rollout)", reps:"8-10", sets:3, link:MS+"ab-wheel-rollout.html", note:"Quỳ gối, lăn ra trước hết mức có kiểm soát, siết bụng kéo lăn về — bài kết buổi cho core và lưng xô kéo giãn.", tag:"back", equip:"Con lăn bụng"},
+      {name:"Hít đất trồng chuối (Pike Push-up)", en:"pike push up shoulder", reps:"8-10", sets:4, equip:"Tự trọng", note:"Bài chính — mông đẩy cao, hạ đầu xuống gần sàn giữa hai tay."},
+      {name:"Hít đất trồng chuối chân cao (Elevated Pike Push-up)", en:"elevated pike push up", reps:"8-10", sets:3, equip:"Ghế thấp", note:"Chân gác lên ghế để tăng tải lên vai, thân gần thẳng đứng hơn."},
+      {name:"Nâng vai ngang với chai nước/túi (Lateral Raise)", en:"lateral raise water bottle", reps:"15", sets:3, equip:"Chai nước/túi", note:"Nâng hai tay ngang vai, hạ chậm có kiểm soát."},
+      {name:"Superman nâng vai sau (Superman Rear Delt Raise)", en:"superman rear delt raise", reps:"15", sets:4, equip:"Tự trọng", note:"Nằm sấp, nâng ngực và tay dang ngang lên khỏi sàn."},
+      {name:"Plank chạm vai (Plank Shoulder Tap)", en:"plank shoulder tap", reps:"20 lần chạm", sets:3, equip:"Tự trọng", note:"Giữ plank ổn định, luân phiên chạm tay vào vai đối diện."},
+      {name:"Xoay vai vòng tròn có tải (Weighted Arm Circles)", en:"weighted arm circles shoulder", reps:"30s mỗi chiều", sets:2, equip:"Chai nước", note:"Bài finisher — burnout nhóm vai giữa."},
     ]},
-  { id:3, short:"Ngày 3", title:"Chân A — Đùi trước (tại nhà)", focus:"Legs A · Tự trọng — dùng tempo chậm và squat một chân để bù thiếu tạ", rest:false,
-    footer:"Không có tạ nặng cho chân: ưu tiên tempo chậm (3s xuống, giữ 1s đáy) và các biến thể một chân để tăng cường độ.",
+  { id:3, key:"chan", short:"Chân", icon:"🦵", title:"Chân — Đùi + bắp chân (tại nhà)", focus:"Legs · Bài một chân là chìa khoá tạo quá tải không cần tạ",
     exercises:[
-      {name:"Squat tự trọng nhịp chậm (Tempo Bodyweight Squat)", reps:"20-25", sets:4, link:MS+"bodyweight-squat.html", note:"Bài chính thay barbell squat — hạ chậm 3s, giữ đáy 1s, đứng lên nhanh có kiểm soát.", tag:null, equip:"Tự trọng"},
-      {name:"Squat nhảy (Jump Squat)", reps:"12-15", sets:3, link:MS+"jump-squat.html", note:"Bật nhảy hết sức ở đáy squat, tiếp đất êm — tạo quá tải bằng lực bung sức thay vì tạ.", tag:null, equip:"Tự trọng"},
-      {name:"Squat một chân có điểm tựa (Assisted Pistol Squat)", reps:"6-8/chân", sets:4, link:MS+"pistol-squat.html", note:"Vịn tường/khung cửa để giữ thăng bằng nếu chưa vững — thay cho leg press/leg extension, nhắm thẳng tứ đầu đùi.", tag:null, equip:"Tự trọng"},
-      {name:"Lunges bước dài tại chỗ (Walking/Reverse Lunge)", reps:"15/chân", sets:3, link:MS+"dumbbell-lunge.html", note:"Không cần tạ vẫn hiệu quả — bước dài, đầu gối trước không vượt mũi chân.", tag:null, equip:"Tự trọng"},
-      {name:"Wall Sit (Ngồi tựa tường)", reps:"Giữ 45-60s", sets:3, link:MS+"wall-sit.html", note:"Đùi song song sàn, lưng áp sát tường — bài đẳng trường đốt cháy tứ đầu đùi cuối buổi.", tag:null, equip:"Tự trọng"},
-      {name:"Nâng bắp chân đứng một chân (Single-Leg Calf Raise)", reps:"15-20/chân", sets:4, link:MS+"standing-calf-raise.html", note:"Đứng một chân trên bậc thềm để tăng biên độ, giữ 1s ở đỉnh.", tag:null, equip:"Tự trọng"},
+      {name:"Squat tự trọng nhịp chậm (Tempo Bodyweight Squat)", en:"tempo bodyweight squat", reps:"15-20", sets:4, equip:"Tự trọng", note:"Hạ chậm 4 giây, đứng lên nhanh — tăng thời gian chịu lực."},
+      {name:"Bulgarian Split Squat tự trọng", en:"bulgarian split squat bodyweight", reps:"12-15/chân", sets:4, equip:"Ghế/giường", note:"Chân sau gác lên ghế, chậm nhịp độ để tăng khó vì không có tạ."},
+      {name:"Nhảy Squat (Jump Squat)", en:"jump squat", reps:"12", sets:3, equip:"Tự trọng", note:"Bật nhảy hết sức từ đáy squat, tiếp đất êm bằng cả bàn chân."},
+      {name:"Lunges bước dài (Walking Lunge)", en:"walking lunge bodyweight", reps:"15/chân", sets:3, equip:"Tự trọng", note:"Bước dài, đầu gối trước không vượt quá mũi chân."},
+      {name:"Wall Sit giữ đẳng trường", en:"wall sit hold", reps:"Giữ 40-60s", sets:3, equip:"Tường", note:"Đùi song song sàn, lưng áp sát tường — giữ càng lâu càng tốt."},
+      {name:"Nâng bắp chân đứng tự trọng (Standing Calf Raise)", en:"standing calf raise bodyweight", reps:"20-25", sets:5, equip:"Tự trọng", note:"Đứng trên bậc thềm để tăng biên độ, giữ 1s ở đỉnh."},
     ]},
-  { id:4, short:"Ngày 4", title:"Đẩy B — Vai (tại nhà)", focus:"Push B · Pike push-up và các biến thể là trung tâm vì không có tạ đơn để nâng ngang vai", rest:false,
-    footer:"Không có tạ đơn để làm lateral raise — bù bằng các bài đẳng trường và biên độ sâu cho vai.",
+  { id:4, key:"mong", short:"Mông", icon:"🍑", title:"Mông — Glute trọng tâm (tại nhà)", focus:"Glutes · Chuỗi sau khó tập tự trọng nhất — ưu tiên kiểm soát chậm và siết đẳng trường",
     exercises:[
-      {name:"Hít đất Pike sâu (Deep Pike Push-up)", reps:"10-12", sets:4, link:MS+"pike-push-up.html", note:"Bài chính vai — chân bước gần tay để tăng góc dọc, hạ đỉnh đầu chạm sàn giữa hai tay.", tag:null, equip:"Tự trọng"},
-      {name:"Pike Push-up chân cao (Elevated Pike Push-up)", reps:"8-10", sets:3, link:MS+"pike-push-up.html", note:"Gác chân lên ghế/giường để tăng góc gần với handstand, nhắm sâu vào vai trước/giữa.", tag:null, equip:"Tự trọng"},
-      {name:"Plank chạm vai (Plank Shoulder Tap)", reps:"16-20 lần chạm", sets:3, link:MS+"plank-shoulder-taps.html", note:"Giữ plank cao, luân phiên chạm tay vào vai đối diện — mô phỏng lateral raise + ổn định core.", tag:null, equip:"Tự trọng"},
-      {name:"Superman nâng vai sau (Superman Rear Delt Raise)", reps:"15", sets:4, link:MS+"superman-exercise.html", note:"Nằm sấp, nâng ngực và tay dang ngang lên khỏi sàn — thay cho face pull/rear delt fly.", tag:"back", equip:"Tự trọng"},
-      {name:"Hít đất kim cương (Diamond Push-up)", reps:"12-15", sets:3, link:MS+"diamond-push-up.html", note:"Bài phụ tay sau thay cho close-grip bench press.", tag:null, equip:"Tự trọng"},
-      {name:"Kéo xà tay hẹp trung tính (Close/Neutral-Grip Pull-up)", reps:"Tối đa rep sạch x3", sets:3, link:MS+"neutral-grip-pull-up.html", note:"Nếu xà có tay cầm trung tính, dùng để cân bằng vai sau/lưng trên trong ngày đẩy.", tag:"back", equip:"Xà đơn"},
+      {name:"Hip Thrust một chân (Single-Leg Glute Bridge)", en:"single leg glute bridge", reps:"12-15/chân", sets:4, equip:"Tự trọng", note:"Vai gác trên sàn/ghế thấp, đẩy hông lên bằng một chân, siết mông ở đỉnh."},
+      {name:"Romanian Deadlift một chân (Single-Leg RDL)", en:"single leg romanian deadlift", reps:"10-12/chân", sets:4, equip:"Tự trọng", note:"Gập hông, giữ thăng bằng, cảm nhận căng gân kheo chân trụ."},
+      {name:"Đá chân sau bốn điểm (Donkey Kick)", en:"donkey kick glute", reps:"15-20/chân", sets:3, equip:"Tự trọng", note:"Quỳ bốn điểm, đá gót lên trần bằng lực mông."},
+      {name:"Đá chân ngang bốn điểm (Fire Hydrant)", en:"fire hydrant glute exercise", reps:"15/chân", sets:3, equip:"Tự trọng", note:"Nhắm mông trung — nâng đầu gối sang ngang, giữ hông ổn định."},
+      {name:"Curtsy Lunge tự trọng", en:"curtsy lunge bodyweight", reps:"12/chân", sets:3, equip:"Tự trọng", note:"Bước chéo chân ra sau, nhắm mông trung + mông lớn."},
+      {name:"Glute Bridge hai chân giữ đỉnh (Glute Bridge Hold)", en:"glute bridge hold isometric", reps:"Giữ 30s", sets:3, equip:"Tự trọng", note:"Bài finisher — siết chặt mông liên tục ở đỉnh."},
     ]},
-  { id:5, short:"Ngày 5", title:"Kéo B — Lưng dày + Core (tại nhà)", focus:"Pull B · Xà đơn + con lăn bụng thay deadlift/barbell row", rest:false,
-    footer:"Không có deadlift: Superman và các bài core đẳng trường gánh vai trò giữ lưng dưới khỏe.",
+  { id:5, key:"lung", short:"Lưng", icon:"🔺", title:"Lưng — Độ rộng + độ dày (tại nhà)", focus:"Back · Xà đơn + con lăn bụng thay deadlift/barbell row",
+    footer:"Không có deadlift: Superman và các bài core đẳng trường gánh vai trò giữ lưng dưới khoẻ.",
     exercises:[
-      {name:"Kéo xà tay rộng — biên độ đầy đủ (Full-ROM Pull-up)", reps:"Tối đa rep sạch x5 set", sets:5, link:MS+"wide-grip-pull-up.html", note:"Bài chính buổi — làm nhiều set hơn để bù cường độ deadlift, nghỉ đủ 2 phút giữa set.", tag:"back", equip:"Xà đơn"},
-      {name:"Superman giữ (Superman Hold)", reps:"Giữ 20-30s", sets:4, link:MS+"superman-exercise.html", note:"Thay cho deadlift/barbell row để xây sức mạnh lưng dưới — nâng cả tay và chân khỏi sàn, giữ chắc.", tag:"back", equip:"Tự trọng"},
-      {name:"Chèo ngang thân bằng khăn trên xà (Towel Bodyweight Row)", reps:"10-12", sets:3, link:MS+"inverted-row.html", note:"Nếu có mép bàn/xà thấp: nằm dưới kéo ngực lên — mô phỏng barbell row, nhắm lưng giữa dày.", tag:"back", equip:"Xà đơn"},
-      {name:"Con lăn bụng (Ab Wheel Rollout)", reps:"10-12", sets:4, link:MS+"ab-wheel-rollout.html", note:"Bài core chính của buổi — tăng dần khoảng cách lăn ra khi khỏe hơn.", tag:"back", equip:"Con lăn bụng"},
-      {name:"Nâng chân treo trên xà (Hanging Leg Raise)", reps:"12-15", sets:3, link:MS+"hanging-leg-raise.html", note:"Treo người trên xà, nâng chân bằng lực bụng dưới, không đung đưa.", tag:"back", equip:"Xà đơn"},
-      {name:"Plank xoay chéo (Russian Twist tự trọng)", reps:"15/bên", sets:3, link:MS+"russian-twist.html", note:"Ngồi giữ thăng bằng, xoay thân có kiểm soát — không cần tạ vẫn hiệu quả cho bụng chéo.", tag:"back", equip:"Tự trọng"},
+      {name:"Kéo xà tay rộng — biên độ đầy đủ (Full-ROM Wide-Grip Pull-up)", en:"wide grip pull up full range", reps:"Tối đa rep sạch x5", sets:5, equip:"Xà đơn", note:"Bài chính — làm nhiều set hơn để bù cường độ, nghỉ đủ 2 phút giữa set."},
+      {name:"Kéo xà tay hẹp trung tính (Close/Neutral-Grip Pull-up)", en:"neutral grip pull up", reps:"Tối đa rep sạch x3", sets:3, equip:"Xà đơn", note:"Cân bằng lưng giữa/xô ở góc cầm khác."},
+      {name:"Chèo ngang thân bằng khăn trên xà (Towel Bodyweight Row)", en:"inverted row towel bodyweight", reps:"10-12", sets:4, equip:"Xà đơn", note:"Nằm dưới kéo ngực lên — mô phỏng barbell row, nhắm lưng giữa dày."},
+      {name:"Superman giữ (Superman Hold)", en:"superman hold exercise", reps:"Giữ 20-30s", sets:4, equip:"Tự trọng", note:"Thay cho deadlift/barbell row để xây sức mạnh lưng dưới."},
+      {name:"Superman nâng vai sau (Superman Rear Delt Raise)", en:"superman rear delt raise", reps:"15", sets:3, equip:"Tự trọng", note:"Nằm sấp, nâng ngực và tay dang ngang khỏi sàn."},
+      {name:"Reverse Snow Angel tự trọng", en:"reverse snow angel back exercise", reps:"15", sets:3, equip:"Tự trọng", note:"Nằm sấp, quét tay từ hông lên qua đầu như làm thiên thần tuyết."},
     ]},
-  { id:6, short:"Ngày 6", title:"Chân B — Đùi sau + Mông (tại nhà)", focus:"Legs B · Bài một chân là chìa khóa để tạo quá tải không cần tạ", rest:false,
-    footer:"Chuỗi sau (hamstring/mông) khó tập tự trọng nhất — ưu tiên kiểm soát chậm và giữ đẳng trường ở đỉnh.",
+  { id:6, key:"nguc", short:"Ngực", icon:"🛡️", title:"Ngực — Trên, giữa, dưới (tại nhà)", focus:"Chest · Biến thể góc độ của hít đất thay các bài máy/tạ",
     exercises:[
-      {name:"Romanian Deadlift một chân (Single-Leg RDL)", reps:"10-12/chân", sets:4, link:MS+"single-leg-romanian-deadlift.html", note:"Bài chính thay RDL tạ đòn — gập hông, giữ thăng bằng, cảm nhận căng gân kheo chân trụ.", tag:"back", equip:"Tự trọng"},
-      {name:"Hip Thrust một chân (Single-Leg Glute Bridge)", reps:"12-15/chân", sets:4, link:MS+"single-leg-glute-bridge.html", note:"Vai gác trên sàn/ghế thấp, đẩy hông lên bằng một chân — siết mông ở đỉnh 1-2s.", tag:null, equip:"Tự trọng"},
-      {name:"Đá chân sau bốn điểm (Donkey Kick)", reps:"15-20/chân", sets:3, link:MS+"donkey-kicks.html", note:"Quỳ bốn điểm, đá gót lên trần bằng lực mông — thay thế leg curl máy.", tag:null, equip:"Tự trọng"},
-      {name:"Bulgarian Split Squat tự trọng", reps:"12-15/chân", sets:3, link:MS+"bulgarian-split-squat.html", note:"Chân sau gác lên ghế/giường, chậm nhịp độ để tăng khó vì không có tạ đơn.", tag:null, equip:"Tự trọng"},
-      {name:"Nâng bắp chân ngồi tự trọng (Seated Calf Raise, có thể để sách trên đùi)", reps:"20-25", sets:4, link:MS+"seated-calf-raise.html", note:"Ngồi trên ghế thấp, nâng gót — đặt vật nặng trên đùi (ba lô, sách) nếu muốn tăng tải.", tag:null, equip:"Tự trọng"},
-    ]},
-  { id:7, short:"Ngày 7", title:"Nghỉ hoàn toàn", focus:"Không tập luyện, phục hồi hoàn toàn để cơ bắp phát triển", rest:true,
-    exercises:[
-      {name:"Nghỉ hoàn toàn", reps:"-", sets:0, link:null, note:"Ngủ đủ 7-9 tiếng, ăn đủ protein (1.6-2.2g/kg thể trọng) và tổng calo dư nhẹ để tăng cơ. Có thể đi bộ nhẹ hoặc giãn cơ 15-20 phút nếu muốn.", tag:null, equip:null},
+      {name:"Hít đất tiêu chuẩn (Standard Push-up)", en:"standard push up chest", reps:"Tối đa rep sạch x4", sets:4, equip:"Tự trọng", note:"Bài chính — thân thẳng hàng, hạ ngực gần chạm sàn."},
+      {name:"Hít đất tay rộng (Wide Push-up)", en:"wide grip push up chest", reps:"12-15", sets:3, equip:"Tự trọng", note:"Tay đặt rộng hơn vai — nhắm ngực ngoài."},
+      {name:"Hít đất chân cao — Decline Push-up", en:"decline push up chest", reps:"12-15", sets:3, equip:"Ghế/giường", note:"Chân gác lên ghế — tăng tải lên ngực trên."},
+      {name:"Hít đất nổ lực/vỗ tay (Explosive Push-up)", en:"explosive clap push up chest", reps:"6-8", sets:3, equip:"Tự trọng", note:"Đẩy người bật khỏi sàn — tăng sức mạnh và kích hoạt sợi cơ nhanh."},
+      {name:"Dips ghế nghiêng người (Lean-Forward Chair Dip)", en:"chest dip chair lean forward", reps:"12-15", sets:3, equip:"Ghế/bàn", note:"Ngả người ra trước nhiều để nhấn vào ngực dưới thay vì tay sau."},
+      {name:"Plank Push-up giữ đáy (Bottom-of-Push-up Hold)", en:"push up isometric hold bottom", reps:"Giữ 20s", sets:3, equip:"Tự trọng", note:"Bài finisher — giữ ở điểm thấp nhất của hít đất, căng ngực liên tục."},
     ]},
 ];
 
-const PROGRAMS = { gym: GYM_DAYS, home: HOME_DAYS };
+const PROGRAMS = { gym: GYM_MUSCLES, home: HOME_MUSCLES };
 
 /* ---------------- State ---------------- */
 function toDateStr(d){ return d.toISOString().slice(0,10); }
@@ -420,8 +429,9 @@ function fmtDate(d){
 }
 let currentDate = new Date();
 let currentMode = 'gym'; // 'gym' | 'home'
-let selectedDayId = null; // day template chosen for currentDate+mode
+let selectedMuscleId = null; // muscle group chosen for currentDate+mode
 let checks = {}; // { exerciseIndex: bool }
+let storageOk = true; // set false if a self-test roundtrip fails
 const TODAY_STR = toDateStr(new Date());
 
 const el = (sel) => document.querySelector(sel);
@@ -439,10 +449,20 @@ const streakLabelEl = el('#streakLabel');
 const modeGymBtn = el('#modeGymBtn');
 const modeHomeBtn = el('#modeHomeBtn');
 const modeHintEl = el('#modeHint');
+const storageBannerEl = el('#storageBanner');
 
-function activeDays(){ return PROGRAMS[currentMode]; }
+function activeMuscles(){ return PROGRAMS[currentMode]; }
 
-/* ---------------- Storage helpers ---------------- */
+/* ---------------- Storage helpers ----------------
+   All writes are funneled through a single promise chain (saveChain) so that
+   rapid clicks can never race each other and overwrite a newer value with an
+   older one — this was the root cause of checkmarks silently disappearing. */
+let saveChain = Promise.resolve();
+function queueWrite(fn){
+  saveChain = saveChain.then(fn, fn);
+  return saveChain;
+}
+
 async function safeGet(key){
   try{
     const res = await window.storage.get(key, false);
@@ -451,17 +471,40 @@ async function safeGet(key){
 }
 async function safeSet(key, value){
   try{
-    await window.storage.set(key, value, false);
+    const res = await window.storage.set(key, value, false);
+    if(!res) throw new Error('null result');
     return true;
   }catch(e){
     console.error('Storage set failed', key, e);
+    markStorageBroken();
     return false;
+  }
+}
+function markStorageBroken(){
+  if(storageOk){
+    storageOk = false;
+    storageBannerEl.classList.add('show');
+  }
+}
+
+async function testStorage(){
+  if(!window.storage || typeof window.storage.set !== 'function'){
+    markStorageBroken();
+    return;
+  }
+  try{
+    const probe = String(Date.now());
+    await window.storage.set('__probe__', probe, false);
+    const res = await window.storage.get('__probe__', false);
+    if(!res || res.value !== probe) throw new Error('roundtrip mismatch');
+  }catch(e){
+    markStorageBroken();
   }
 }
 
 function modeKey(dateStr){ return `mode:${dateStr}`; }
-function checksKey(mode, dateStr, dayId){ return `checks:${mode}:${dateStr}:${dayId}`; }
-function dayPickKey(mode, dateStr){ return `daypick:${mode}:${dateStr}`; }
+function checksKey(mode, dateStr, muscleId){ return `checks:${mode}:${dateStr}:${muscleId}`; }
+function musclePickKey(mode, dateStr){ return `musclepick:${mode}:${dateStr}`; }
 
 /* ---------------- Render: mode toggle ---------------- */
 function renderModeToggle(){
@@ -470,7 +513,7 @@ function renderModeToggle(){
   document.body.dataset.mode = currentMode;
   modeHintEl.textContent = currentMode === 'gym'
     ? 'Full thiết bị phòng tập'
-    : 'Chỉ xà đơn + con lăn bụng + tự trọng';
+    : 'Chỉ xà đơn + tự trọng + đồ có sẵn ở nhà';
 }
 
 async function switchMode(newMode){
@@ -478,12 +521,12 @@ async function switchMode(newMode){
   currentMode = newMode;
   renderModeToggle();
   const dateStr = toDateStr(currentDate);
-  await safeSet(modeKey(dateStr), currentMode);
+  await queueWrite(() => safeSet(modeKey(dateStr), currentMode));
   loadingMsgEl.style.display = 'block';
-  const pickedDay = await safeGet(dayPickKey(currentMode, dateStr));
-  selectedDayId = pickedDay ? parseInt(pickedDay, 10) : activeDays()[0].id;
+  const picked = await safeGet(musclePickKey(currentMode, dateStr));
+  selectedMuscleId = picked ? parseInt(picked, 10) : activeMuscles()[0].id;
   renderTabs();
-  const saved = await safeGet(checksKey(currentMode, dateStr, selectedDayId));
+  const saved = await safeGet(checksKey(currentMode, dateStr, selectedMuscleId));
   checks = saved ? JSON.parse(saved) : {};
   loadingMsgEl.style.display = 'none';
   renderDay();
@@ -497,20 +540,20 @@ modeHomeBtn.addEventListener('click', () => switchMode('home'));
 /* ---------------- Render: tabs ---------------- */
 function renderTabs(){
   tabsEl.innerHTML = '';
-  activeDays().forEach(d => {
+  activeMuscles().forEach(m => {
     const btn = document.createElement('div');
-    btn.className = 'tab' + (d.id === selectedDayId ? ' active' : '') + (d.rest ? ' rest' : '');
-    btn.innerHTML = `<span class="n">${d.id}</span>${d.rest ? 'Nghỉ' : d.title.split(' ')[0]}`;
-    btn.addEventListener('click', () => selectDay(d.id));
+    btn.className = 'tab' + (m.id === selectedMuscleId ? ' active' : '');
+    btn.innerHTML = `<span class="icon">${m.icon}</span><span class="label">${m.short}</span>`;
+    btn.addEventListener('click', () => selectMuscle(m.id));
     tabsEl.appendChild(btn);
   });
 }
 
 /* ---------------- Render: exercise list ---------------- */
 function renderDay(){
-  const day = activeDays().find(d => d.id === selectedDayId);
+  const day = activeMuscles().find(m => m.id === selectedMuscleId);
   if(!day) return;
-  dayTitleEl.innerHTML = `${day.short} — ${day.title} <span class="mode-badge ${currentMode}">${currentMode === 'gym' ? 'Phòng gym' : 'Ở nhà'}</span>`;
+  dayTitleEl.innerHTML = `${day.title} <span class="mode-badge ${currentMode}">${currentMode === 'gym' ? 'Phòng gym' : 'Ở nhà'}</span>`;
   dayFocusEl.textContent = day.focus;
   footerNoteEl.innerHTML = day.footer ? `<div class="footer-note">${day.footer}</div>` : '';
 
@@ -528,12 +571,11 @@ function renderDay(){
       <div class="ex-body">
         <div class="ex-top">
           <span class="ex-name">${ex.name}</span>
-          ${ex.tag === 'back' ? '<span class="badge back">Lưng/Bụng</span>' : ''}
           ${ex.equip ? `<span class="badge equip">${ex.equip}</span>` : ''}
         </div>
         <div class="ex-meta">${metaBits.map(m=>`<span>${m}</span>`).join('')}</div>
         <div class="ex-note">${ex.note}</div>
-        ${ex.link ? `<a class="ex-link" href="${ex.link}" target="_blank" rel="noopener">▶ Xem video hướng dẫn chuẩn</a>` : ''}
+        <a class="ex-link" href="${ytLink(ex.en)}" target="_blank" rel="noopener">▶ Xem video hướng dẫn</a>
       </div>
     `;
     exListEl.appendChild(li);
@@ -549,7 +591,7 @@ function renderDay(){
 }
 
 function updateProgress(){
-  const day = activeDays().find(d => d.id === selectedDayId);
+  const day = activeMuscles().find(m => m.id === selectedMuscleId);
   const total = day.exercises.length;
   const done = Object.values(checks).filter(Boolean).length;
   progressCountEl.textContent = `${done}/${total}`;
@@ -561,20 +603,25 @@ async function toggleCheck(idx){
   checks[idx] = !checks[idx];
   renderDay();
   const dateStr = toDateStr(currentDate);
-  await safeSet(checksKey(currentMode, dateStr, selectedDayId), JSON.stringify(checks));
-  await safeSet(dayPickKey(currentMode, dateStr), String(selectedDayId));
+  const muscleId = selectedMuscleId;
+  const snapshot = JSON.stringify(checks);
+  await queueWrite(() => safeSet(checksKey(currentMode, dateStr, muscleId), snapshot));
+  await queueWrite(() => safeSet(musclePickKey(currentMode, dateStr), String(muscleId)));
   renderStrip();
   renderTabDoneMarks();
 }
 
-async function selectDay(dayId){
-  selectedDayId = dayId;
+async function selectMuscle(muscleId){
+  selectedMuscleId = muscleId;
   renderTabs();
   loadingMsgEl.style.display = 'block';
   const dateStr = toDateStr(currentDate);
-  const saved = await safeGet(checksKey(currentMode, dateStr, dayId));
+  // make sure any in-flight write finishes before we read, so we never
+  // read a stale value out from under a write that's still in progress
+  await saveChain;
+  const saved = await safeGet(checksKey(currentMode, dateStr, muscleId));
   checks = saved ? JSON.parse(saved) : {};
-  await safeSet(dayPickKey(currentMode, dateStr), String(dayId));
+  await queueWrite(() => safeSet(musclePickKey(currentMode, dateStr), String(muscleId)));
   loadingMsgEl.style.display = 'none';
   renderDay();
   renderTabDoneMarks();
@@ -585,13 +632,14 @@ async function goToDate(newDate){
   dateLabelEl.textContent = fmtDate(currentDate) + (toDateStr(currentDate) === TODAY_STR ? ' · Hôm nay' : '');
   const dateStr = toDateStr(currentDate);
   loadingMsgEl.style.display = 'block';
+  await saveChain;
   const savedMode = await safeGet(modeKey(dateStr));
   currentMode = (savedMode === 'gym' || savedMode === 'home') ? savedMode : 'gym';
   renderModeToggle();
-  const pickedDay = await safeGet(dayPickKey(currentMode, dateStr));
-  selectedDayId = pickedDay ? parseInt(pickedDay, 10) : activeDays()[0].id;
+  const picked = await safeGet(musclePickKey(currentMode, dateStr));
+  selectedMuscleId = picked ? parseInt(picked, 10) : activeMuscles()[0].id;
   renderTabs();
-  const saved = await safeGet(checksKey(currentMode, dateStr, selectedDayId));
+  const saved = await safeGet(checksKey(currentMode, dateStr, selectedMuscleId));
   checks = saved ? JSON.parse(saved) : {};
   loadingMsgEl.style.display = 'none';
   renderDay();
@@ -599,19 +647,19 @@ async function goToDate(newDate){
 }
 
 async function renderTabDoneMarks(){
-  // mark current tab as done if all exercises checked
-  const day = activeDays().find(d => d.id === selectedDayId);
+  const day = activeMuscles().find(m => m.id === selectedMuscleId);
   const total = day.exercises.length;
   const done = Object.values(checks).filter(Boolean).length;
   const tabButtons = tabsEl.children;
-  for(const d of activeDays()){
-    const btn = tabButtons[d.id - 1];
-    if(d.id === selectedDayId && total > 0 && done === total){
+  activeMuscles().forEach((m, i) => {
+    const btn = tabButtons[i];
+    if(!btn) return;
+    if(m.id === selectedMuscleId && total > 0 && done === total){
       btn.classList.add('done');
     } else {
       btn.classList.remove('done');
     }
-  }
+  });
 }
 
 document.getElementById('prevDay').addEventListener('click', () => {
@@ -625,7 +673,8 @@ document.getElementById('resetTopBtn').addEventListener('click', async () => {
   checks = {};
   renderDay();
   const dateStr = toDateStr(currentDate);
-  await safeSet(checksKey(currentMode, dateStr, selectedDayId), JSON.stringify(checks));
+  const muscleId = selectedMuscleId;
+  await queueWrite(() => safeSet(checksKey(currentMode, dateStr, muscleId), JSON.stringify(checks)));
   renderStrip();
   renderTabDoneMarks();
 });
@@ -633,7 +682,8 @@ document.getElementById('resetBtn').addEventListener('click', async () => {
   checks = {};
   renderDay();
   const dateStr = toDateStr(currentDate);
-  await safeSet(checksKey(currentMode, dateStr, selectedDayId), JSON.stringify(checks));
+  const muscleId = selectedMuscleId;
+  await queueWrite(() => safeSet(checksKey(currentMode, dateStr, muscleId), JSON.stringify(checks)));
   renderStrip();
   renderTabDoneMarks();
 });
@@ -650,11 +700,11 @@ async function renderStrip(){
     const dateStr = toDateStr(d);
     const dayMode = await safeGet(modeKey(dateStr));
     const mode = (dayMode === 'gym' || dayMode === 'home') ? dayMode : 'gym';
-    const pickedDay = await safeGet(dayPickKey(mode, dateStr));
-    if(!pickedDay) return { dateStr, ratio: 0, hasSession:false, mode };
-    const dayObj = PROGRAMS[mode].find(x => x.id === parseInt(pickedDay,10));
-    const total = dayObj ? dayObj.exercises.length : 0;
-    const saved = await safeGet(checksKey(mode, dateStr, pickedDay));
+    const picked = await safeGet(musclePickKey(mode, dateStr));
+    if(!picked) return { dateStr, ratio: 0, hasSession:false, mode };
+    const muscleObj = PROGRAMS[mode].find(x => x.id === parseInt(picked,10));
+    const total = muscleObj ? muscleObj.exercises.length : 0;
+    const saved = await safeGet(checksKey(mode, dateStr, picked));
     const checkObj = saved ? JSON.parse(saved) : {};
     const done = Object.values(checkObj).filter(Boolean).length;
     return { dateStr, ratio: total ? done/total : 0, hasSession:true, mode };
@@ -672,11 +722,10 @@ async function renderStrip(){
     stripEl.appendChild(tick);
   });
 
-  // streak: consecutive full days ending today (or yesterday if today not done yet)
   let streak = 0;
   for(let i = results.length - 1; i >= 0; i--){
     if(results[i].ratio >= 1) streak++;
-    else if(results[i].dateStr === TODAY_STR) continue; // don't break streak just because today isn't finished yet
+    else if(results[i].dateStr === TODAY_STR) continue;
     else break;
   }
   streakLabelEl.textContent = `🔥 ${streak} ngày liên tiếp`;
@@ -684,6 +733,7 @@ async function renderStrip(){
 
 /* ---------------- Init ---------------- */
 (async function init(){
+  await testStorage();
   renderModeToggle();
   renderTabs();
   await goToDate(new Date());
