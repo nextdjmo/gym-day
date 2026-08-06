@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sổ Tập — Nhật Ký Buổi Tập</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #12151A;
+    --surface: #1B1F27;
+    --surface-2: #212632;
+    --line: #2B3140;
+    --ink: #F2EFE9;
+    --ink-dim: #9099AA;
+    --ink-faint: #5C6274;
+    --amber: #E8B23D;
+    --amber-dim: #4A3B1E;
+    --teal: #4FB6A6;
+    --teal-dim: #1D3B37;
+    --danger: #E0684F;
+    --radius: 14px;
+  }
+  *{ box-sizing: border-box; }
+  html,body{
+    margin:0; padding:0; min-height:100vh;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  body{
+    background-image:
+      radial-gradient(circle at 15% 0%, rgba(232,178,61,0.06), transparent 45%),
+      radial-gradient(circle at 100% 10%, rgba(79,182,166,0.06), transparent 40%);
+  }
+  .wrap{ max-width: 900px; margin: 0 auto; padding: 28px 20px 60px; }
+
+  /* ---------- Header ---------- */
+  header.top{
+    display:flex; align-items:flex-end; justify-content:space-between;
+    gap: 16px; flex-wrap: wrap; margin-bottom: 22px;
+    border-bottom: 1px solid var(--line); padding-bottom: 18px;
+  }
+  .brand-eyebrow{
+    font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.14em;
+    color: var(--teal); text-transform:uppercase; margin:0 0 6px;
+  }
+  h1{
+    font-family:'Oswald', sans-serif; font-weight:700; text-transform:uppercase;
+    letter-spacing: .03em; font-size: 30px; margin:0; line-height:1;
+  }
+  .stat-pill{
+    font-family:'IBM Plex Mono', monospace; font-size: 13px; color: var(--ink-dim);
+    background: var(--surface); border:1px solid var(--line); border-radius: 999px;
+    padding: 8px 14px; display:flex; align-items:center; gap:8px; white-space:nowrap;
+  }
+  .stat-pill b{ color: var(--amber); font-weight:600; }
+
+  /* ---------- Mode toggle ---------- */
+  .mode-row{ display:flex; align-items:center; gap:10px; margin-bottom: 16px; flex-wrap: wrap; }
+  .mode-toggle{
+    display:inline-flex; background: var(--surface); border:1px solid var(--line);
+    border-radius: 12px; padding: 4px; gap: 4px;
+  }
+  .mode-btn{
+    font-family:'Oswald', sans-serif; font-size: 13.5px; letter-spacing:.03em; text-transform:uppercase;
+    padding: 9px 16px; border-radius: 9px; border:none; cursor:pointer; background: transparent;
+    color: var(--ink-dim); display:flex; align-items:center; gap:7px; transition: all .15s;
+  }
+  .mode-btn:hover{ color: var(--ink); }
+  .mode-btn.active.gym{ background: var(--amber-dim); color: var(--amber); }
+  .mode-btn.active.home{ background: var(--teal-dim); color: var(--teal); }
+  .mode-hint{ font-size: 12.5px; color: var(--ink-faint); }
+
+  /* ---------- Date row ---------- */
+  .date-row{
+    display:flex; align-items:center; gap:10px; margin-bottom: 18px; flex-wrap:wrap;
+  }
+  .date-nav{
+    display:flex; align-items:center; gap:8px; background: var(--surface);
+    border:1px solid var(--line); border-radius: 10px; padding: 6px 6px 6px 14px;
+  }
+  .date-nav button{
+    width: 30px; height:30px; border-radius:8px; border:1px solid var(--line);
+    background: var(--surface-2); color: var(--ink); cursor:pointer; font-size:14px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .date-nav button:hover{ border-color: var(--amber); color: var(--amber); }
+  .date-nav .date-label{
+    font-family:'IBM Plex Mono', monospace; font-size: 14px; min-width: 128px; text-align:center;
+  }
+  .today-btn{
+    font-family:'Inter'; font-size: 12.5px; color: var(--ink-dim); background: transparent;
+    border: 1px dashed var(--line); border-radius: 8px; padding: 8px 12px; cursor:pointer;
+  }
+  .today-btn:hover{ color: var(--ink); border-color: var(--ink-dim); }
+
+  /* ---------- Day tabs ---------- */
+  .tabs{
+    display:grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 22px;
+  }
+  .tab{
+    font-family:'Oswald', sans-serif; font-size: 13px; letter-spacing:.02em;
+    background: var(--surface); border:1px solid var(--line); border-radius: 10px;
+    padding: 10px 4px 8px; text-align:center; cursor:pointer; color: var(--ink-dim);
+    transition: border-color .15s, color .15s, background .15s;
+  }
+  .tab .n{ display:block; font-size: 18px; font-weight:700; color: inherit; }
+  .tab:hover{ border-color: var(--ink-dim); color: var(--ink); }
+  .tab.active{ border-color: var(--amber); background: var(--amber-dim); color: var(--amber); }
+  body[data-mode="home"] .tab.active{ border-color: var(--teal); background: var(--teal-dim); color: var(--teal); }
+  .tab.done .n::after{ content:" ✓"; }
+  .tab.rest{ opacity:.75; }
+
+  /* ---------- Day card ---------- */
+  .card{
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 22px 22px 10px; margin-bottom: 20px;
+  }
+  .card-head{ display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap; margin-bottom: 14px;}
+  .day-title{ font-family:'Oswald', sans-serif; font-size: 22px; text-transform:uppercase; margin:0 0 4px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .mode-badge{
+    font-family:'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing:.04em;
+    padding: 3px 8px; border-radius:5px; text-transform:uppercase; white-space:nowrap; vertical-align:middle;
+  }
+  .mode-badge.gym{ background: var(--amber-dim); color: var(--amber); border:1px solid #5a4826; }
+  .mode-badge.home{ background: var(--teal-dim); color: var(--teal); border:1px solid #285249; }
+  .day-focus{ font-size: 13px; color: var(--ink-dim); margin:0; }
+  .progress-wrap{ min-width: 160px; }
+  .progress-num{ font-family:'IBM Plex Mono', monospace; font-size:13px; color: var(--ink-dim); text-align:right; margin-bottom:6px;}
+  .progress-num b{ color: var(--amber); font-size:15px; }
+  body[data-mode="home"] .progress-num b{ color: var(--teal); }
+  .progress-bar{ height:8px; border-radius:6px; background: var(--surface-2); overflow:hidden; border:1px solid var(--line); }
+  .progress-fill{ height:100%; background: linear-gradient(90deg, var(--amber), #F4D58D); width:0%; transition: width .3s ease; }
+  body[data-mode="home"] .progress-fill{ background: linear-gradient(90deg, var(--teal), #9FE0D3); }
+
+  .footer-note{
+    font-size: 12.5px; color: var(--teal); background: var(--teal-dim);
+    border: 1px solid #285249; border-radius: 10px; padding: 10px 14px; margin: 10px 0 16px;
+  }
+
+  /* ---------- Exercise rows ---------- */
+  ul.ex-list{ list-style:none; margin:0; padding:0; }
+  li.ex{
+    display:grid; grid-template-columns: 30px 1fr; gap: 12px;
+    padding: 14px 0; border-top: 1px solid var(--line);
+  }
+  li.ex:first-child{ border-top:none; }
+  li.ex.checked{ opacity: .55; }
+  .chk{
+    width: 26px; height: 26px; border-radius: 7px; border: 1.5px solid var(--ink-faint);
+    background: var(--surface-2); cursor:pointer; display:flex; align-items:center; justify-content:center;
+    margin-top: 2px; flex-shrink:0; transition: all .15s;
+  }
+  .chk svg{ opacity:0; transform: scale(.6); transition: all .15s; }
+  li.ex.checked .chk{ background: var(--amber); border-color: var(--amber); }
+  body[data-mode="home"] li.ex.checked .chk{ background: var(--teal); border-color: var(--teal); }
+  li.ex.checked .chk svg{ opacity:1; transform: scale(1); }
+  .ex-body{ min-width:0; }
+  .ex-top{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom: 4px;}
+  .ex-name{ font-weight:600; font-size: 15px; }
+  li.ex.checked .ex-name{ text-decoration: line-through; text-decoration-color: var(--ink-faint); }
+  .badge{
+    font-family:'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing:.03em;
+    padding: 2px 7px; border-radius:5px; text-transform:uppercase; white-space:nowrap;
+  }
+  .badge.back{ background: var(--teal-dim); color: var(--teal); border:1px solid #285249; }
+  .badge.equip{ background: var(--surface-2); color: var(--ink-dim); border:1px solid var(--line); }
+  .ex-meta{
+    font-family:'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink-dim);
+    display:flex; gap:14px; flex-wrap:wrap; margin-bottom: 6px;
+  }
+  .ex-note{ font-size: 13px; color: var(--ink-dim); line-height:1.5; margin-bottom: 6px; }
+  .ex-link{
+    font-size: 12.5px; color: var(--amber); text-decoration:none; display:inline-flex; align-items:center; gap:5px;
+  }
+  body[data-mode="home"] .ex-link{ color: var(--teal); }
+  .ex-link:hover{ text-decoration: underline; }
+
+  /* ---------- Habit strip ---------- */
+  .habit-section{ margin-top: 26px; }
+  .habit-head{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom: 12px; }
+  .habit-title{ font-family:'Oswald', sans-serif; font-size: 16px; text-transform:uppercase; letter-spacing:.03em; }
+  .streak{ font-family:'IBM Plex Mono', monospace; font-size:13px; color: var(--amber); }
+  .strip{ display:grid; grid-template-columns: repeat(14, 1fr); gap: 6px; }
+  .tick{
+    aspect-ratio: 1; border-radius: 7px; background: var(--surface-2);
+    border: 1px solid var(--line); position:relative; cursor:default;
+  }
+  .tick.partial{ background: linear-gradient(180deg, var(--amber-dim), var(--surface-2)); border-color:#5a4826; }
+  .tick.full{ background: var(--amber); border-color: var(--amber); }
+  .tick.full.home{ background: var(--teal); border-color: var(--teal); }
+  .tick.partial.home{ background: linear-gradient(180deg, var(--teal-dim), var(--surface-2)); border-color:#285249; }
+  .tick .lbl{
+    position:absolute; bottom:-16px; left:50%; transform:translateX(-50%);
+    font-family:'IBM Plex Mono', monospace; font-size: 9px; color: var(--ink-faint); white-space:nowrap;
+  }
+  .strip-wrap{ padding-bottom: 20px; }
+
+  .reset-btn{
+    font-family:'Inter'; font-size:12px; color: var(--ink-faint); background:transparent;
+    border:none; cursor:pointer; text-decoration:underline; padding: 4px 0 14px;
+  }
+  .reset-btn:hover{ color: var(--danger); }
+
+  .loading, .storage-error{
+    font-family:'IBM Plex Mono', monospace; font-size:12.5px; color: var(--ink-dim);
+    padding: 10px 0;
+  }
+  .storage-error{ color: var(--danger); }
+
+  @media (max-width: 640px){
+    .tabs{ grid-template-columns: repeat(4, 1fr); }
+    h1{ font-size: 22px; }
+    .strip{ grid-template-columns: repeat(7, 1fr); row-gap: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div>
+      <p class="brand-eyebrow">Nhật ký buổi tập · 6 ngày/tuần</p>
+      <h1>Sổ Tập Của Bạn</h1>
+    </div>
+    <div class="stat-pill">1m68 · 67kg · BMI <b>23.7</b></div>
+  </header>
+
+  <div class="mode-row">
+    <div class="mode-toggle" id="modeToggle">
+      <button class="mode-btn gym" id="modeGymBtn">🏋️ Phòng gym</button>
+      <button class="mode-btn home" id="modeHomeBtn">🏠 Ở nhà</button>
+    </div>
+    <span class="mode-hint" id="modeHint">Full thiết bị phòng tập</span>
+  </div>
+
+  <div class="date-row">
+    <div class="date-nav">
+      <button id="prevDay" aria-label="Ngày trước">‹</button>
+      <span class="date-label" id="dateLabel">—</span>
+      <button id="nextDay" aria-label="Ngày sau">›</button>
+    </div>
+    <button class="today-btn" id="todayBtn">Về hôm nay</button>
+    <button class="today-btn" id="resetTopBtn">↺ Reset ngày này</button>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="card" id="card">
+    <div class="card-head">
+      <div>
+        <p class="day-title" id="dayTitle">—</p>
+        <p class="day-focus" id="dayFocus">—</p>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-num"><b id="progressCount">0/0</b> bài đã tập</div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+    </div>
+    <div id="footerNote"></div>
+    <div id="loadingMsg" class="loading">Đang tải trạng thái...</div>
+    <ul class="ex-list" id="exList"></ul>
+    <button class="reset-btn" id="resetBtn">Bỏ chọn tất cả cho ngày này</button>
+  </div>
+
+  <section class="habit-section">
+    <div class="habit-head">
+      <span class="habit-title">14 ngày gần đây</span>
+      <span class="streak" id="streakLabel">🔥 0 ngày liên tiếp</span>
+    </div>
+    <div class="strip-wrap">
+      <div class="strip" id="strip"></div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* ---------------- Data ---------------- */
+const MS = "https://www.muscleandstrength.com/exercises/";
+
+/* ============ GYM PROGRAM ============ */
+const GYM_DAYS = [
+  { id:1, short:"Ngày 1", title:"Đẩy A — Ngực trọng tâm", focus:"Push A · Nén nặng trước, isolation sau, RPE 8-9 ở compound", rest:false,
+    exercises:[
+      {name:"Đẩy ngực thanh đòn (Barbell Bench Press)", reps:"5-6 x4, +6-8 x1 (pyramid)", sets:5, link:MS+"barbell-bench-press.html", note:"Bài chính trong ngày — tăng tạ mỗi khi đạt đủ rep ở mọi set. Nghỉ 2-3 phút giữa set.", tag:null},
+      {name:"Đẩy ngực nghiêng tạ đơn (Incline Dumbbell Press)", reps:"8-10", sets:4, link:MS+"incline-dumbbell-bench-press.html", note:"Ghế nghiêng 30 độ, hạ sâu hết biên độ để kéo giãn phần ngực trên.", tag:null},
+      {name:"Dips ngực (Weighted Chest Dip)", reps:"8-12", sets:3, link:MS+"dips-chest-version.html", note:"Ngả người ra trước, khuỷu tay mở rộng để nhắm vào ngực dưới. Đeo thêm đĩa tạ nếu tự trọng đã dễ.", tag:null},
+      {name:"Ép ngực cáp thấp lên cao (Low-to-High Cable Fly)", reps:"12-15", sets:3, link:MS+"cable-crossovers.html", note:"Set cuối làm dropset: hết rep thì giảm 30% tạ, làm tiếp đến thất bại.", tag:null},
+      {name:"Đẩy tay sau cáp thừng (Rope Overhead Extension)", reps:"10-12", sets:3, link:MS+"tricep-extension.html", note:"Kéo giãn tối đa phía sau đầu, siết chặt ở điểm duỗi thẳng.", tag:null},
+      {name:"Đẩy tay sau cáp (Tricep Pushdown)", reps:"12-15 + dropset", sets:3, link:MS+"tricep-extension.html", note:"Set cuối rest-pause: tập đến gần thất bại, nghỉ 15s, làm thêm 4-6 rep.", tag:null},
+    ]},
+  { id:2, short:"Ngày 2", title:"Kéo A — Lưng rộng", focus:"Pull A · Ưu tiên độ rộng lưng (V-taper) + tay trước", rest:false,
+    exercises:[
+      {name:"Kéo xà có tạ (Weighted Pull-up)", reps:"6-8", sets:4, link:MS+"wide-grip-pull-up.html", note:"Đeo thêm tạ khi kéo tự trọng quá 10 rep dễ dàng. Kéo vai xuống trước khi gập khuỷu.", tag:"back"},
+      {name:"Kéo xô tay rộng (Wide-Grip Lat Pulldown)", reps:"10-12", sets:4, link:MS+"lat-pulldown.html", note:"Ưỡn ngực nhẹ, kéo thanh về xương ức, tập trung siết lưng xô chứ không dùng tay.", tag:"back"},
+      {name:"Kéo cáp tay thẳng (Straight-Arm Pulldown)", reps:"12-15", sets:3, link:MS+"straight-arm-pulldown.html", note:"Bài cô lập lưng xô, giữ tay gần như thẳng suốt chuyển động.", tag:"back"},
+      {name:"Chèo cáp ngồi tay rộng (Wide Seated Cable Row)", reps:"12", sets:3, link:MS+"seated-row.html", note:"Kéo khuỷu tay ra ngoài để nhấn vào lưng giữa/xô thay vì lưng dày.", tag:"back"},
+      {name:"Cuốn tay trước thanh đòn EZ (EZ-Bar Curl)", reps:"8-10", sets:4, link:MS+"standing-barbell-curl.html", note:"Kiểm soát pha hạ 3 giây, không đung đưa người tạo đà.", tag:null},
+      {name:"Cuốn tạ đơn nghiêng ghế (Incline Dumbbell Curl)", reps:"10-12 + dropset", sets:3, link:MS+"incline-dumbbell-curl.html", note:"Ghế nghiêng kéo giãn tay trước tối đa, set cuối làm dropset.", tag:null},
+    ]},
+  { id:3, short:"Ngày 3", title:"Chân A — Đùi trước", focus:"Legs A · Trọng tâm tứ đầu đùi + bắp chân tần suất cao", rest:false,
+    exercises:[
+      {name:"Squat thanh đòn (Barbell Back Squat)", reps:"5x5 nặng, +8-10 x1", sets:6, link:MS+"squat.html", note:"Bài chính của buổi — tăng tạ dần theo tuần, hạ đến khi đùi song song hoặc thấp hơn.", tag:null},
+      {name:"Đẩy chân máy chân hẹp (Close-Stance Leg Press)", reps:"10-12", sets:4, link:MS+"45-degree-leg-press.html", note:"Đặt chân thấp và hẹp trên bệ để nhấn vào tứ đầu đùi.", tag:null},
+      {name:"Hack Squat hoặc Duỗi chân máy (Leg Extension)", reps:"12-15 + dropset", sets:4, link:MS+"leg-extension.html", note:"Set cuối dropset: giảm tạ 30%, làm tiếp đến thất bại thực sự.", tag:null},
+      {name:"Lunges bước dài tạ đơn (Walking Dumbbell Lunge)", reps:"12/chân", sets:3, link:MS+"dumbbell-lunge.html", note:"Bước dài vừa phải, đầu gối trước không vượt quá mũi chân.", tag:null},
+      {name:"Nâng bắp chân đứng (Standing Calf Raise)", reps:"12-15", sets:5, link:MS+"standing-calf-raise.html", note:"Nâng gót cao hết mức, giữ 1 giây ở đỉnh, hạ chậm kéo giãn sâu.", tag:null},
+    ]},
+  { id:4, short:"Ngày 4", title:"Đẩy B — Vai trọng tâm", focus:"Push B · Ưu tiên 3 đầu vai để tạo độ tròn + tay sau bổ trợ", rest:false,
+    exercises:[
+      {name:"Đẩy vai đứng thanh đòn (Standing Military Press)", reps:"6-8", sets:4, link:MS+"military-press.html", note:"Bài chính vai — siết bụng mông chắc để tránh ưỡn lưng dưới.", tag:null},
+      {name:"Đẩy vai tạ đơn ngồi (Seated Dumbbell Press)", reps:"8-10", sets:3, link:MS+"seated-dumbbell-press.html", note:"Biên độ đầy đủ, không khóa cứng khuỷu ở điểm cuối.", tag:null},
+      {name:"Nâng tạ ngang vai (Lateral Raise)", reps:"12-15 + dropset", sets:4, link:MS+"dumbbell-lateral-raise.html", note:"Bài quan trọng nhất để mở rộng vai — nghiêng người nhẹ, nâng đến ngang vai, set cuối dropset.", tag:null},
+      {name:"Nâng tạ ngang vai cáp (Cable Lateral Raise)", reps:"15", sets:3, link:MS+"cable-lateral-raise.html", note:"Cáp giữ căng cơ liên tục suốt biên độ, khác với tạ đơn.", tag:null},
+      {name:"Face Pull / Bay vai sau (Rear Delt Fly)", reps:"15", sets:4, link:MS+"cable-face-pull", note:"Ưu tiên vai sau để cân đối 3 đầu, tránh mất cân bằng vai trước quá phát triển.", tag:"back"},
+      {name:"Đẩy ngực tay hẹp (Close-Grip Bench Press)", reps:"8-10", sets:3, link:MS+"close-grip-bench-press.html", note:"Bài phụ cho tay sau, tay đặt hẹp hơn vai một chút, khuỷu ép sát thân.", tag:null},
+    ]},
+  { id:5, short:"Ngày 5", title:"Kéo B — Lưng dày + Core", focus:"Pull B · Trọng tâm độ dày lưng (thickness) + bụng", rest:false,
+    exercises:[
+      {name:"Deadlift", reps:"5x5 nặng, kỹ thuật chuẩn", sets:5, link:MS+"deadlifts.html", note:"Bài chính — đứng lên bằng lực hông, giữ lưng thẳng tự nhiên suốt biên độ.", tag:"back"},
+      {name:"Chèo thanh đòn (Barbell Row)", reps:"8-10", sets:4, link:MS+"bent-over-barbell-row.html", note:"Thân nghiêng 45 độ, kéo thanh về rốn để nhắm lưng giữa/dày.", tag:"back"},
+      {name:"Chèo T-Bar hoặc máy tựa ngực (Chest-Supported Row)", reps:"10-12", sets:3, link:MS+"t-bar-row.html", note:"Tựa ngực giúp cô lập lưng, loại bỏ đà từ thân dưới.", tag:"back"},
+      {name:"Kéo cáp ngồi tay hẹp (Close-Grip Seated Row)", reps:"12 + dropset", sets:3, link:MS+"seated-row.html", note:"Tay hẹp nhấn vào lưng giữa, set cuối dropset.", tag:"back"},
+      {name:"Cuốn tay trước Preacher (Preacher Curl)", reps:"8-10", sets:3, link:MS+"preacher-curl.html", note:"Ghế preacher cố định khuỷu, tránh gian lận bằng đà vai.", tag:null},
+      {name:"Nâng chân treo (Hanging Leg Raise)", reps:"12-15", sets:3, link:MS+"hanging-leg-raise.html", note:"Nâng chân bằng lực bụng dưới, không đung đưa thân người.", tag:"back"},
+      {name:"Gập bụng chéo (Cable Woodchopper / Russian Twist)", reps:"15/bên", sets:3, link:MS+"russian-twist.html", note:"Xoay có kiểm soát từ thân trên, giữ hông cố định.", tag:"back"},
+    ]},
+  { id:6, short:"Ngày 6", title:"Chân B — Đùi sau + Mông", focus:"Legs B · Trọng tâm chuỗi sau (hamstring, mông) — quyết định độ dày vòng 3", rest:false,
+    exercises:[
+      {name:"Romanian Deadlift (RDL)", reps:"8-10", sets:4, link:MS+"romanian-deadlift", note:"Gập ở hông, cảm nhận căng sâu ở gân kheo, đầu gối chỉ hơi khuỵu.", tag:"back"},
+      {name:"Đá đùi sau máy (Lying/Seated Leg Curl)", reps:"10-12 + dropset", sets:4, link:MS+"leg-curl.html", note:"Kiểm soát tốc độ cả hai chiều, set cuối dropset để tận dụng mệt mỏi.", tag:null},
+      {name:"Hip Thrust", reps:"8-10", sets:4, link:MS+"barbell-hip-thrust.html", note:"Siết mông ở đỉnh chuyển động 1-2 giây, không ưỡn lưng dưới quá mức.", tag:null},
+      {name:"Bulgarian Split Squat", reps:"10/chân", sets:3, link:MS+"bulgarian-split-squat.html", note:"Chân sau đặt trên ghế, tập trung dồn lực vào chân trước.", tag:null},
+      {name:"Nâng bắp chân ngồi (Seated Calf Raise)", reps:"15-20", sets:4, link:MS+"seated-calf-raise.html", note:"Bài này nhắm cơ dép (soleus) — bổ sung cho bắp chân đứng ở ngày chân A.", tag:null},
+    ]},
+  { id:7, short:"Ngày 7", title:"Nghỉ hoàn toàn", focus:"Không tập luyện, phục hồi hoàn toàn để cơ bắp phát triển", rest:true,
+    exercises:[
+      {name:"Nghỉ hoàn toàn", reps:"-", sets:0, link:null, note:"Ngủ đủ 7-9 tiếng, ăn đủ protein (1.6-2.2g/kg thể trọng) và tổng calo dư nhẹ để tăng cơ. Có thể đi bộ nhẹ hoặc giãn cơ 15-20 phút nếu muốn.", tag:null},
+    ]},
+];
+
+/* ============ HOME PROGRAM — chỉ xà đơn + con lăn bụng + tự trọng ============ */
+const HOME_DAYS = [
+  { id:1, short:"Ngày 1", title:"Đẩy A — Ngực (tại nhà)", focus:"Push A · Tự trọng — đổi góc tay/độ nghiêng để tăng độ khó thay vì tăng tạ", rest:false,
+    footer:"Không có tạ: tăng độ khó bằng cách chậm nhịp độ (3-4s xuống), nâng chân lên cao, hoặc thêm rep/set.",
+    exercises:[
+      {name:"Hít đất chân cao (Decline Push-up)", reps:"12-15", sets:4, link:MS+"decline-push-up.html", note:"Gác chân lên ghế/giường, tay chống sàn — nhắm ngực trên thay cho incline press.", tag:null, equip:"Tự trọng"},
+      {name:"Hít đất tiêu chuẩn (Standard Push-up)", reps:"15-20", sets:4, link:MS+"pushups.html", note:"Bài chính thay bench press — siết bụng, hạ ngực sát sàn, kiểm soát nhịp độ.", tag:null, equip:"Tự trọng"},
+      {name:"Hít đất rộng tay (Wide Push-up)", reps:"12-15", sets:3, link:MS+"pushups.html", note:"Tay đặt rộng hơn vai để kéo giãn ngực ngoài, thay cho cable fly.", tag:null, equip:"Tự trọng"},
+      {name:"Hít đất kim cương (Diamond Push-up)", reps:"10-12 + dropset (về hít đất thường)", sets:3, link:MS+"diamond-push-up.html", note:"Hai tay chụm hình kim cương dưới ngực — dồn lực vào tay sau. Hết sức thì chuyển ngay sang hít đất tay rộng để làm dropset.", tag:null, equip:"Tự trọng"},
+      {name:"Hít đất Pike (Pike Push-up)", reps:"10-12", sets:3, link:MS+"pike-push-up.html", note:"Gập người hình chữ V, đẩy đỉnh đầu xuống sàn — thay thế bài vai/tay sau bổ trợ.", tag:null, equip:"Tự trọng"},
+      {name:"Plank chống đẩy tay sau (Tricep Dip Plank Hold)", reps:"Giữ 30-45s", sets:3, link:MS+"triceps-dips.html", note:"Nếu có mép ghế/bậc thềm chắc chắn có thể dùng để dip tay sau; nếu không, giữ plank khuỷu gập 90 độ luân phiên.", tag:null, equip:"Tự trọng"},
+    ]},
+  { id:2, short:"Ngày 2", title:"Kéo A — Lưng rộng (tại nhà)", focus:"Pull A · Xà đơn là vua — ưu tiên biên độ đầy đủ hơn số rep", rest:false,
+    footer:"Xà đơn không có tạ thêm: khi rep dễ dàng > 10-12, làm chậm pha hạ (negative) 4-5s để tăng khó.",
+    exercises:[
+      {name:"Kéo xà tay rộng (Wide-Grip Pull-up)", reps:"Tối đa rep sạch x4 set", sets:4, link:MS+"wide-grip-pull-up.html", note:"Bài chính thay cho pull-up có tạ — kéo vai xuống trước, lên đến khi cằm qua xà.", tag:"back", equip:"Xà đơn"},
+      {name:"Kéo xà ngửa tay (Chin-up)", reps:"Tối đa rep sạch x3 set", sets:3, link:MS+"chin-up.html", note:"Tay ngửa hẹp hơn vai — nhấn nhiều vào lưng xô dưới + tay trước, thay cho lat pulldown.", tag:"back", equip:"Xà đơn"},
+      {name:"Kéo xà âm — Negative Pull-up", reps:"5-6 x hạ chậm 5s", sets:3, link:MS+"negative-pull-up.html", note:"Nhảy/bước lên vị trí cằm qua xà, hạ xuống thật chậm — thay cho straight-arm pulldown để tăng thời gian chịu tải lưng xô.", tag:"back", equip:"Xà đơn"},
+      {name:"Treo xà co vai (Scapular Pull-up / Dead Hang Row)", reps:"10-12", sets:3, link:MS+"scapular-pull-up.html", note:"Treo người, chỉ nhô vai lên xuống không gập khuỷu — kích hoạt lưng giữa, thay cho seated cable row.", tag:"back", equip:"Xà đơn"},
+      {name:"Gập tay trước đẳng trường trên xà (Isometric Curl Hold)", reps:"Giữ góc 90° x 20-30s", sets:3, link:MS+"chin-up.html", note:"Treo ở vị trí giữa chin-up, giữ khuỷu 90 độ — thay thế bài cuốn tay trước không tạ.", tag:null, equip:"Xà đơn"},
+      {name:"Con lăn bụng (Ab Wheel Rollout)", reps:"8-10", sets:3, link:MS+"ab-wheel-rollout.html", note:"Quỳ gối, lăn ra trước hết mức có kiểm soát, siết bụng kéo lăn về — bài kết buổi cho core và lưng xô kéo giãn.", tag:"back", equip:"Con lăn bụng"},
+    ]},
+  { id:3, short:"Ngày 3", title:"Chân A — Đùi trước (tại nhà)", focus:"Legs A · Tự trọng — dùng tempo chậm và squat một chân để bù thiếu tạ", rest:false,
+    footer:"Không có tạ nặng cho chân: ưu tiên tempo chậm (3s xuống, giữ 1s đáy) và các biến thể một chân để tăng cường độ.",
+    exercises:[
+      {name:"Squat tự trọng nhịp chậm (Tempo Bodyweight Squat)", reps:"20-25", sets:4, link:MS+"bodyweight-squat.html", note:"Bài chính thay barbell squat — hạ chậm 3s, giữ đáy 1s, đứng lên nhanh có kiểm soát.", tag:null, equip:"Tự trọng"},
+      {name:"Squat nhảy (Jump Squat)", reps:"12-15", sets:3, link:MS+"jump-squat.html", note:"Bật nhảy hết sức ở đáy squat, tiếp đất êm — tạo quá tải bằng lực bung sức thay vì tạ.", tag:null, equip:"Tự trọng"},
+      {name:"Squat một chân có điểm tựa (Assisted Pistol Squat)", reps:"6-8/chân", sets:4, link:MS+"pistol-squat.html", note:"Vịn tường/khung cửa để giữ thăng bằng nếu chưa vững — thay cho leg press/leg extension, nhắm thẳng tứ đầu đùi.", tag:null, equip:"Tự trọng"},
+      {name:"Lunges bước dài tại chỗ (Walking/Reverse Lunge)", reps:"15/chân", sets:3, link:MS+"dumbbell-lunge.html", note:"Không cần tạ vẫn hiệu quả — bước dài, đầu gối trước không vượt mũi chân.", tag:null, equip:"Tự trọng"},
+      {name:"Wall Sit (Ngồi tựa tường)", reps:"Giữ 45-60s", sets:3, link:MS+"wall-sit.html", note:"Đùi song song sàn, lưng áp sát tường — bài đẳng trường đốt cháy tứ đầu đùi cuối buổi.", tag:null, equip:"Tự trọng"},
+      {name:"Nâng bắp chân đứng một chân (Single-Leg Calf Raise)", reps:"15-20/chân", sets:4, link:MS+"standing-calf-raise.html", note:"Đứng một chân trên bậc thềm để tăng biên độ, giữ 1s ở đỉnh.", tag:null, equip:"Tự trọng"},
+    ]},
+  { id:4, short:"Ngày 4", title:"Đẩy B — Vai (tại nhà)", focus:"Push B · Pike push-up và các biến thể là trung tâm vì không có tạ đơn để nâng ngang vai", rest:false,
+    footer:"Không có tạ đơn để làm lateral raise — bù bằng các bài đẳng trường và biên độ sâu cho vai.",
+    exercises:[
+      {name:"Hít đất Pike sâu (Deep Pike Push-up)", reps:"10-12", sets:4, link:MS+"pike-push-up.html", note:"Bài chính vai — chân bước gần tay để tăng góc dọc, hạ đỉnh đầu chạm sàn giữa hai tay.", tag:null, equip:"Tự trọng"},
+      {name:"Pike Push-up chân cao (Elevated Pike Push-up)", reps:"8-10", sets:3, link:MS+"pike-push-up.html", note:"Gác chân lên ghế/giường để tăng góc gần với handstand, nhắm sâu vào vai trước/giữa.", tag:null, equip:"Tự trọng"},
+      {name:"Plank chạm vai (Plank Shoulder Tap)", reps:"16-20 lần chạm", sets:3, link:MS+"plank-shoulder-taps.html", note:"Giữ plank cao, luân phiên chạm tay vào vai đối diện — mô phỏng lateral raise + ổn định core.", tag:null, equip:"Tự trọng"},
+      {name:"Superman nâng vai sau (Superman Rear Delt Raise)", reps:"15", sets:4, link:MS+"superman-exercise.html", note:"Nằm sấp, nâng ngực và tay dang ngang lên khỏi sàn — thay cho face pull/rear delt fly.", tag:"back", equip:"Tự trọng"},
+      {name:"Hít đất kim cương (Diamond Push-up)", reps:"12-15", sets:3, link:MS+"diamond-push-up.html", note:"Bài phụ tay sau thay cho close-grip bench press.", tag:null, equip:"Tự trọng"},
+      {name:"Kéo xà tay hẹp trung tính (Close/Neutral-Grip Pull-up)", reps:"Tối đa rep sạch x3", sets:3, link:MS+"neutral-grip-pull-up.html", note:"Nếu xà có tay cầm trung tính, dùng để cân bằng vai sau/lưng trên trong ngày đẩy.", tag:"back", equip:"Xà đơn"},
+    ]},
+  { id:5, short:"Ngày 5", title:"Kéo B — Lưng dày + Core (tại nhà)", focus:"Pull B · Xà đơn + con lăn bụng thay deadlift/barbell row", rest:false,
+    footer:"Không có deadlift: Superman và các bài core đẳng trường gánh vai trò giữ lưng dưới khỏe.",
+    exercises:[
+      {name:"Kéo xà tay rộng — biên độ đầy đủ (Full-ROM Pull-up)", reps:"Tối đa rep sạch x5 set", sets:5, link:MS+"wide-grip-pull-up.html", note:"Bài chính buổi — làm nhiều set hơn để bù cường độ deadlift, nghỉ đủ 2 phút giữa set.", tag:"back", equip:"Xà đơn"},
+      {name:"Superman giữ (Superman Hold)", reps:"Giữ 20-30s", sets:4, link:MS+"superman-exercise.html", note:"Thay cho deadlift/barbell row để xây sức mạnh lưng dưới — nâng cả tay và chân khỏi sàn, giữ chắc.", tag:"back", equip:"Tự trọng"},
+      {name:"Chèo ngang thân bằng khăn trên xà (Towel Bodyweight Row)", reps:"10-12", sets:3, link:MS+"inverted-row.html", note:"Nếu có mép bàn/xà thấp: nằm dưới kéo ngực lên — mô phỏng barbell row, nhắm lưng giữa dày.", tag:"back", equip:"Xà đơn"},
+      {name:"Con lăn bụng (Ab Wheel Rollout)", reps:"10-12", sets:4, link:MS+"ab-wheel-rollout.html", note:"Bài core chính của buổi — tăng dần khoảng cách lăn ra khi khỏe hơn.", tag:"back", equip:"Con lăn bụng"},
+      {name:"Nâng chân treo trên xà (Hanging Leg Raise)", reps:"12-15", sets:3, link:MS+"hanging-leg-raise.html", note:"Treo người trên xà, nâng chân bằng lực bụng dưới, không đung đưa.", tag:"back", equip:"Xà đơn"},
+      {name:"Plank xoay chéo (Russian Twist tự trọng)", reps:"15/bên", sets:3, link:MS+"russian-twist.html", note:"Ngồi giữ thăng bằng, xoay thân có kiểm soát — không cần tạ vẫn hiệu quả cho bụng chéo.", tag:"back", equip:"Tự trọng"},
+    ]},
+  { id:6, short:"Ngày 6", title:"Chân B — Đùi sau + Mông (tại nhà)", focus:"Legs B · Bài một chân là chìa khóa để tạo quá tải không cần tạ", rest:false,
+    footer:"Chuỗi sau (hamstring/mông) khó tập tự trọng nhất — ưu tiên kiểm soát chậm và giữ đẳng trường ở đỉnh.",
+    exercises:[
+      {name:"Romanian Deadlift một chân (Single-Leg RDL)", reps:"10-12/chân", sets:4, link:MS+"single-leg-romanian-deadlift.html", note:"Bài chính thay RDL tạ đòn — gập hông, giữ thăng bằng, cảm nhận căng gân kheo chân trụ.", tag:"back", equip:"Tự trọng"},
+      {name:"Hip Thrust một chân (Single-Leg Glute Bridge)", reps:"12-15/chân", sets:4, link:MS+"single-leg-glute-bridge.html", note:"Vai gác trên sàn/ghế thấp, đẩy hông lên bằng một chân — siết mông ở đỉnh 1-2s.", tag:null, equip:"Tự trọng"},
+      {name:"Đá chân sau bốn điểm (Donkey Kick)", reps:"15-20/chân", sets:3, link:MS+"donkey-kicks.html", note:"Quỳ bốn điểm, đá gót lên trần bằng lực mông — thay thế leg curl máy.", tag:null, equip:"Tự trọng"},
+      {name:"Bulgarian Split Squat tự trọng", reps:"12-15/chân", sets:3, link:MS+"bulgarian-split-squat.html", note:"Chân sau gác lên ghế/giường, chậm nhịp độ để tăng khó vì không có tạ đơn.", tag:null, equip:"Tự trọng"},
+      {name:"Nâng bắp chân ngồi tự trọng (Seated Calf Raise, có thể để sách trên đùi)", reps:"20-25", sets:4, link:MS+"seated-calf-raise.html", note:"Ngồi trên ghế thấp, nâng gót — đặt vật nặng trên đùi (ba lô, sách) nếu muốn tăng tải.", tag:null, equip:"Tự trọng"},
+    ]},
+  { id:7, short:"Ngày 7", title:"Nghỉ hoàn toàn", focus:"Không tập luyện, phục hồi hoàn toàn để cơ bắp phát triển", rest:true,
+    exercises:[
+      {name:"Nghỉ hoàn toàn", reps:"-", sets:0, link:null, note:"Ngủ đủ 7-9 tiếng, ăn đủ protein (1.6-2.2g/kg thể trọng) và tổng calo dư nhẹ để tăng cơ. Có thể đi bộ nhẹ hoặc giãn cơ 15-20 phút nếu muốn.", tag:null, equip:null},
+    ]},
+];
+
+const PROGRAMS = { gym: GYM_DAYS, home: HOME_DAYS };
+
+/* ---------------- State ---------------- */
+function toDateStr(d){ return d.toISOString().slice(0,10); }
+function fmtDate(d){
+  const days = ["CN","T2","T3","T4","T5","T6","T7"];
+  return `${days[d.getDay()]}, ${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`;
+}
+let currentDate = new Date();
+let currentMode = 'gym'; // 'gym' | 'home'
+let selectedDayId = null; // day template chosen for currentDate+mode
+let checks = {}; // { exerciseIndex: bool }
+const TODAY_STR = toDateStr(new Date());
+
+const el = (sel) => document.querySelector(sel);
+const tabsEl = el('#tabs');
+const exListEl = el('#exList');
+const dateLabelEl = el('#dateLabel');
+const dayTitleEl = el('#dayTitle');
+const dayFocusEl = el('#dayFocus');
+const progressCountEl = el('#progressCount');
+const progressFillEl = el('#progressFill');
+const footerNoteEl = el('#footerNote');
+const loadingMsgEl = el('#loadingMsg');
+const stripEl = el('#strip');
+const streakLabelEl = el('#streakLabel');
+const modeGymBtn = el('#modeGymBtn');
+const modeHomeBtn = el('#modeHomeBtn');
+const modeHintEl = el('#modeHint');
+
+function activeDays(){ return PROGRAMS[currentMode]; }
+
+/* ---------------- Storage helpers ---------------- */
+async function safeGet(key){
+  try{
+    const res = await window.storage.get(key, false);
+    return res ? res.value : null;
+  }catch(e){ return null; }
+}
+async function safeSet(key, value){
+  try{
+    await window.storage.set(key, value, false);
+    return true;
+  }catch(e){
+    console.error('Storage set failed', key, e);
+    return false;
+  }
+}
+
+function modeKey(dateStr){ return `mode:${dateStr}`; }
+function checksKey(mode, dateStr, dayId){ return `checks:${mode}:${dateStr}:${dayId}`; }
+function dayPickKey(mode, dateStr){ return `daypick:${mode}:${dateStr}`; }
+
+/* ---------------- Render: mode toggle ---------------- */
+function renderModeToggle(){
+  modeGymBtn.classList.toggle('active', currentMode === 'gym');
+  modeHomeBtn.classList.toggle('active', currentMode === 'home');
+  document.body.dataset.mode = currentMode;
+  modeHintEl.textContent = currentMode === 'gym'
+    ? 'Full thiết bị phòng tập'
+    : 'Chỉ xà đơn + con lăn bụng + tự trọng';
+}
+
+async function switchMode(newMode){
+  if(newMode === currentMode) return;
+  currentMode = newMode;
+  renderModeToggle();
+  const dateStr = toDateStr(currentDate);
+  await safeSet(modeKey(dateStr), currentMode);
+  loadingMsgEl.style.display = 'block';
+  const pickedDay = await safeGet(dayPickKey(currentMode, dateStr));
+  selectedDayId = pickedDay ? parseInt(pickedDay, 10) : activeDays()[0].id;
+  renderTabs();
+  const saved = await safeGet(checksKey(currentMode, dateStr, selectedDayId));
+  checks = saved ? JSON.parse(saved) : {};
+  loadingMsgEl.style.display = 'none';
+  renderDay();
+  renderTabDoneMarks();
+  renderStrip();
+}
+
+modeGymBtn.addEventListener('click', () => switchMode('gym'));
+modeHomeBtn.addEventListener('click', () => switchMode('home'));
+
+/* ---------------- Render: tabs ---------------- */
+function renderTabs(){
+  tabsEl.innerHTML = '';
+  activeDays().forEach(d => {
+    const btn = document.createElement('div');
+    btn.className = 'tab' + (d.id === selectedDayId ? ' active' : '') + (d.rest ? ' rest' : '');
+    btn.innerHTML = `<span class="n">${d.id}</span>${d.rest ? 'Nghỉ' : d.title.split(' ')[0]}`;
+    btn.addEventListener('click', () => selectDay(d.id));
+    tabsEl.appendChild(btn);
+  });
+}
+
+/* ---------------- Render: exercise list ---------------- */
+function renderDay(){
+  const day = activeDays().find(d => d.id === selectedDayId);
+  if(!day) return;
+  dayTitleEl.innerHTML = `${day.short} — ${day.title} <span class="mode-badge ${currentMode}">${currentMode === 'gym' ? 'Phòng gym' : 'Ở nhà'}</span>`;
+  dayFocusEl.textContent = day.focus;
+  footerNoteEl.innerHTML = day.footer ? `<div class="footer-note">${day.footer}</div>` : '';
+
+  exListEl.innerHTML = '';
+  day.exercises.forEach((ex, idx) => {
+    const li = document.createElement('li');
+    li.className = 'ex' + (checks[idx] ? ' checked' : '');
+    const metaBits = [];
+    if(ex.sets) metaBits.push(`${ex.sets} set`);
+    if(ex.reps) metaBits.push(`${ex.reps} rep`);
+    li.innerHTML = `
+      <div class="chk" data-idx="${idx}" role="checkbox" aria-checked="${!!checks[idx]}" tabindex="0">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7L5.5 10.5L12 3" stroke="#12151A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="ex-body">
+        <div class="ex-top">
+          <span class="ex-name">${ex.name}</span>
+          ${ex.tag === 'back' ? '<span class="badge back">Lưng/Bụng</span>' : ''}
+          ${ex.equip ? `<span class="badge equip">${ex.equip}</span>` : ''}
+        </div>
+        <div class="ex-meta">${metaBits.map(m=>`<span>${m}</span>`).join('')}</div>
+        <div class="ex-note">${ex.note}</div>
+        ${ex.link ? `<a class="ex-link" href="${ex.link}" target="_blank" rel="noopener">▶ Xem video hướng dẫn chuẩn</a>` : ''}
+      </div>
+    `;
+    exListEl.appendChild(li);
+  });
+
+  exListEl.querySelectorAll('.chk').forEach(chk => {
+    const handler = () => toggleCheck(parseInt(chk.dataset.idx, 10));
+    chk.addEventListener('click', handler);
+    chk.addEventListener('keydown', (e) => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); handler(); } });
+  });
+
+  updateProgress();
+}
+
+function updateProgress(){
+  const day = activeDays().find(d => d.id === selectedDayId);
+  const total = day.exercises.length;
+  const done = Object.values(checks).filter(Boolean).length;
+  progressCountEl.textContent = `${done}/${total}`;
+  progressFillEl.style.width = total ? `${(done/total)*100}%` : '0%';
+}
+
+/* ---------------- Actions ---------------- */
+async function toggleCheck(idx){
+  checks[idx] = !checks[idx];
+  renderDay();
+  const dateStr = toDateStr(currentDate);
+  await safeSet(checksKey(currentMode, dateStr, selectedDayId), JSON.stringify(checks));
+  await safeSet(dayPickKey(currentMode, dateStr), String(selectedDayId));
+  renderStrip();
+  renderTabDoneMarks();
+}
+
+async function selectDay(dayId){
+  selectedDayId = dayId;
+  renderTabs();
+  loadingMsgEl.style.display = 'block';
+  const dateStr = toDateStr(currentDate);
+  const saved = await safeGet(checksKey(currentMode, dateStr, dayId));
+  checks = saved ? JSON.parse(saved) : {};
+  await safeSet(dayPickKey(currentMode, dateStr), String(dayId));
+  loadingMsgEl.style.display = 'none';
+  renderDay();
+  renderTabDoneMarks();
+}
+
+async function goToDate(newDate){
+  currentDate = newDate;
+  dateLabelEl.textContent = fmtDate(currentDate) + (toDateStr(currentDate) === TODAY_STR ? ' · Hôm nay' : '');
+  const dateStr = toDateStr(currentDate);
+  loadingMsgEl.style.display = 'block';
+  const savedMode = await safeGet(modeKey(dateStr));
+  currentMode = (savedMode === 'gym' || savedMode === 'home') ? savedMode : 'gym';
+  renderModeToggle();
+  const pickedDay = await safeGet(dayPickKey(currentMode, dateStr));
+  selectedDayId = pickedDay ? parseInt(pickedDay, 10) : activeDays()[0].id;
+  renderTabs();
+  const saved = await safeGet(checksKey(currentMode, dateStr, selectedDayId));
+  checks = saved ? JSON.parse(saved) : {};
+  loadingMsgEl.style.display = 'none';
+  renderDay();
+  renderTabDoneMarks();
+}
+
+async function renderTabDoneMarks(){
+  // mark current tab as done if all exercises checked
+  const day = activeDays().find(d => d.id === selectedDayId);
+  const total = day.exercises.length;
+  const done = Object.values(checks).filter(Boolean).length;
+  const tabButtons = tabsEl.children;
+  for(const d of activeDays()){
+    const btn = tabButtons[d.id - 1];
+    if(d.id === selectedDayId && total > 0 && done === total){
+      btn.classList.add('done');
+    } else {
+      btn.classList.remove('done');
+    }
+  }
+}
+
+document.getElementById('prevDay').addEventListener('click', () => {
+  const d = new Date(currentDate); d.setDate(d.getDate() - 1); goToDate(d);
+});
+document.getElementById('nextDay').addEventListener('click', () => {
+  const d = new Date(currentDate); d.setDate(d.getDate() + 1); goToDate(d);
+});
+document.getElementById('todayBtn').addEventListener('click', () => goToDate(new Date()));
+document.getElementById('resetTopBtn').addEventListener('click', async () => {
+  checks = {};
+  renderDay();
+  const dateStr = toDateStr(currentDate);
+  await safeSet(checksKey(currentMode, dateStr, selectedDayId), JSON.stringify(checks));
+  renderStrip();
+  renderTabDoneMarks();
+});
+document.getElementById('resetBtn').addEventListener('click', async () => {
+  checks = {};
+  renderDay();
+  const dateStr = toDateStr(currentDate);
+  await safeSet(checksKey(currentMode, dateStr, selectedDayId), JSON.stringify(checks));
+  renderStrip();
+  renderTabDoneMarks();
+});
+
+/* ---------------- Habit strip (last 14 days) ---------------- */
+async function renderStrip(){
+  stripEl.innerHTML = '';
+  const dates = [];
+  for(let i = 13; i >= 0; i--){
+    const d = new Date(); d.setDate(d.getDate() - i);
+    dates.push(d);
+  }
+  const results = await Promise.all(dates.map(async (d) => {
+    const dateStr = toDateStr(d);
+    const dayMode = await safeGet(modeKey(dateStr));
+    const mode = (dayMode === 'gym' || dayMode === 'home') ? dayMode : 'gym';
+    const pickedDay = await safeGet(dayPickKey(mode, dateStr));
+    if(!pickedDay) return { dateStr, ratio: 0, hasSession:false, mode };
+    const dayObj = PROGRAMS[mode].find(x => x.id === parseInt(pickedDay,10));
+    const total = dayObj ? dayObj.exercises.length : 0;
+    const saved = await safeGet(checksKey(mode, dateStr, pickedDay));
+    const checkObj = saved ? JSON.parse(saved) : {};
+    const done = Object.values(checkObj).filter(Boolean).length;
+    return { dateStr, ratio: total ? done/total : 0, hasSession:true, mode };
+  }));
+
+  results.forEach(r => {
+    const tick = document.createElement('div');
+    let cls = 'tick';
+    if(r.ratio >= 1) cls += ' full' + (r.mode === 'home' ? ' home' : '');
+    else if(r.ratio > 0) cls += ' partial' + (r.mode === 'home' ? ' home' : '');
+    tick.className = cls;
+    const d = new Date(r.dateStr + 'T00:00:00');
+    const modeLbl = r.mode === 'home' ? 'Ở nhà' : 'Phòng gym';
+    tick.title = `${fmtDate(d)} (${modeLbl}): ${Math.round(r.ratio*100)}% hoàn thành`;
+    stripEl.appendChild(tick);
+  });
+
+  // streak: consecutive full days ending today (or yesterday if today not done yet)
+  let streak = 0;
+  for(let i = results.length - 1; i >= 0; i--){
+    if(results[i].ratio >= 1) streak++;
+    else if(results[i].dateStr === TODAY_STR) continue; // don't break streak just because today isn't finished yet
+    else break;
+  }
+  streakLabelEl.textContent = `🔥 ${streak} ngày liên tiếp`;
+}
+
+/* ---------------- Init ---------------- */
+(async function init(){
+  renderModeToggle();
+  renderTabs();
+  await goToDate(new Date());
+  await renderStrip();
+})();
+</script>
+</body>
+</html>
