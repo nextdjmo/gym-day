@@ -24,6 +24,8 @@
     --violet-dim: #2E2A4A;
     --danger: #E0684F;
     --danger-dim: #3A241E;
+    --rep: #6FCF97;
+    --rep-dim: #1E3A2C;
     --radius: 14px;
   }
   *{ box-sizing: border-box; }
@@ -216,6 +218,102 @@
   body[data-mode="ppl"] .ex-link{ color: var(--violet); }
   .ex-link:hover{ text-decoration: underline; }
 
+  /* ---------- Weight range (min/max tạ) ---------- */
+  .ex-weight{
+    display:flex; align-items:center; gap: 10px; flex-wrap:wrap; margin-top: 8px;
+  }
+  .ex-weight .w-field{
+    display:flex; align-items:center; gap:6px; background: var(--surface-2);
+    border: 1px solid var(--line); border-radius: 8px; padding: 5px 9px;
+  }
+  .ex-weight label{
+    font-family:'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing:.03em;
+    color: var(--ink-faint); text-transform:uppercase; white-space:nowrap;
+  }
+  .ex-weight input[type="number"]{
+    width: 48px; background: transparent; border: none; outline:none;
+    color: var(--ink); font-family:'IBM Plex Mono', monospace; font-size: 13px;
+    text-align:right; -moz-appearance: textfield;
+  }
+  .ex-weight input[type="number"]::-webkit-outer-spin-button,
+  .ex-weight input[type="number"]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+  .ex-weight input[type="number"]::placeholder{ color: var(--ink-faint); }
+  .ex-weight .unit{ font-size: 11px; color: var(--ink-faint); }
+  .ex-weight .w-field.min{ border-color:#285249; }
+  .ex-weight .w-field.min label{ color: var(--teal); }
+  .ex-weight .w-field.max{ border-color:#5a4826; }
+  .ex-weight .w-field.max label{ color: var(--amber); }
+  .ex-weight .w-range-note{ font-size: 11.5px; color: var(--ink-faint); }
+
+  /* ---------- Rep challenge (thử thách hôm nay) ---------- */
+  .challenge-section{ margin-top: 26px; }
+  .challenge-head{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom: 12px; flex-wrap:wrap; gap:6px; }
+  .challenge-title{ font-family:'Oswald', sans-serif; font-size: 16px; text-transform:uppercase; letter-spacing:.03em; }
+  .challenge-sub{ font-size: 12.5px; color: var(--ink-dim); }
+  .challenge-list{ display:flex; flex-direction:column; gap:14px; margin-bottom: 16px; }
+  .challenge-card{
+    background: var(--surface); border:1px solid var(--line); border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+  .challenge-card-head{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:10px; }
+  .challenge-name{ font-family:'Oswald', sans-serif; font-size:17px; text-transform:uppercase; letter-spacing:.02em; display:flex; align-items:center; gap:8px;}
+  .challenge-name .icon{ font-size:18px; }
+  .challenge-del{
+    background:transparent; border:none; color: var(--ink-faint); cursor:pointer; font-size:15px;
+    padding: 2px 4px; line-height:1;
+  }
+  .challenge-del:hover{ color: var(--danger); }
+  .challenge-progress-row{ display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+  .challenge-progress-bar{ flex:1; height:10px; border-radius:6px; background: var(--surface-2); overflow:hidden; border:1px solid var(--line); }
+  .challenge-progress-fill{ height:100%; background: linear-gradient(90deg, var(--rep), #B7ECC9); width:0%; transition: width .3s ease; }
+  .challenge-progress-fill.over{ background: linear-gradient(90deg, var(--amber), #F4D58D); }
+  .challenge-progress-num{ font-family:'IBM Plex Mono', monospace; font-size:13px; color: var(--ink-dim); white-space:nowrap; }
+  .challenge-progress-num b{ color: var(--rep); font-size:15px; }
+  .challenge-quickadd{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom: 10px; }
+  .qa-btn{
+    font-family:'IBM Plex Mono', monospace; font-size: 13px; background: var(--rep-dim);
+    color: var(--rep); border: 1px solid #2c5940; border-radius: 8px; padding: 7px 12px; cursor:pointer;
+  }
+  .qa-btn:hover{ border-color: var(--rep); }
+  .qa-custom{ display:flex; align-items:center; gap:6px; background: var(--surface-2); border:1px solid var(--line); border-radius:8px; padding: 4px 4px 4px 10px; }
+  .qa-custom input{ width:56px; background:transparent; border:none; outline:none; color:var(--ink); font-family:'IBM Plex Mono', monospace; font-size:13px; }
+  .qa-custom button{
+    font-family:'Oswald', sans-serif; font-size:12.5px; text-transform:uppercase; background: var(--surface);
+    color: var(--ink-dim); border:1px solid var(--line); border-radius:6px; padding:7px 10px; cursor:pointer;
+  }
+  .qa-custom button:hover{ color: var(--ink); border-color: var(--ink-dim); }
+  .challenge-log{ display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+  .log-chip{
+    font-family:'IBM Plex Mono', monospace; font-size:11.5px; color: var(--ink-dim);
+    background: var(--surface-2); border:1px solid var(--line); border-radius: 999px; padding: 3px 9px;
+  }
+  .log-undo{
+    font-family:'Inter'; font-size:11.5px; color: var(--ink-faint); background:transparent; border:none;
+    cursor:pointer; text-decoration:underline; padding: 2px 0;
+  }
+  .log-undo:hover{ color: var(--danger); }
+  .challenge-empty{ font-size:13px; color: var(--ink-faint); padding: 4px 0 14px; }
+  .add-challenge-form{
+    display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+    background: var(--surface); border:1px dashed var(--line); border-radius: var(--radius);
+    padding: 14px 16px;
+  }
+  .add-challenge-form input[type="text"]{
+    flex:1; min-width: 140px; background: var(--surface-2); border:1px solid var(--line); border-radius:8px;
+    padding: 9px 12px; color: var(--ink); font-family:'Inter'; font-size:13.5px; outline:none;
+  }
+  .add-challenge-form input[type="number"]{
+    width: 100px; background: var(--surface-2); border:1px solid var(--line); border-radius:8px;
+    padding: 9px 12px; color: var(--ink); font-family:'IBM Plex Mono', monospace; font-size:13.5px; outline:none;
+  }
+  .add-challenge-form input:focus{ border-color: var(--rep); }
+  .add-challenge-btn{
+    font-family:'Oswald', sans-serif; font-size:13.5px; text-transform:uppercase; letter-spacing:.02em;
+    background: var(--rep-dim); color: var(--rep); border:1px solid #2c5940; border-radius:8px;
+    padding: 10px 16px; cursor:pointer; white-space:nowrap;
+  }
+  .add-challenge-btn:hover{ border-color: var(--rep); }
+
   /* ---------- Habit strip ---------- */
   .habit-section{ margin-top: 26px; }
   .habit-head{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom: 12px; }
@@ -250,6 +348,9 @@
     body[data-mode="ppl"] .tabs{ grid-template-columns: repeat(3, 1fr); }
     h1{ font-size: 22px; }
     .strip{ grid-template-columns: repeat(7, 1fr); row-gap: 22px; }
+    .add-challenge-form{ flex-direction:column; align-items:stretch; }
+    .add-challenge-form input[type="number"]{ width:100%; }
+    .add-challenge-btn{ width:100%; }
   }
 </style>
 </head>
@@ -335,6 +436,19 @@
     </div>
   </section>
 
+  <section class="challenge-section">
+    <div class="challenge-head">
+      <span class="challenge-title">🎯 Thử thách rep hôm nay</span>
+      <span class="challenge-sub">Đặt mục tiêu (VD: hít đất 1000, squat 1000) rồi cộng dần từng set — khỏi phải nhớ trong đầu</span>
+    </div>
+    <div class="challenge-list" id="challengeList"></div>
+    <div class="add-challenge-form" id="addChallengeForm">
+      <input type="text" id="challengeNameInput" placeholder="Tên bài (VD: Hít đất)" maxlength="40" />
+      <input type="number" id="challengeTargetInput" placeholder="Mục tiêu" min="1" step="1" />
+      <button class="add-challenge-btn" id="addChallengeBtn">+ Tạo mục tiêu</button>
+    </div>
+  </section>
+
 </div>
 
 <script>
@@ -405,25 +519,27 @@ const GYM_MUSCLES = [
 
 /* ============ HOME — bodyweight + xà đơn + con lăn bụng, isolated by muscle ============ */
 const HOME_MUSCLES = [
-  { id:7, key:"bung", short:"Bụng", icon:"🔥", title:"Bụng — 6 múi + Core toàn diện (tại nhà)", focus:"Abs · 4 bài, ít nhóm hơn nhưng nhiều set hơn để đủ khối lượng — gập trên, gập dưới, chống xoay, chống ưỡn",
-    footer:"Bài ưu tiên hàng đầu của bạn. Bụng hồi phục nhanh hơn hẳn các nhóm cơ khác (ít tổn thương vi mô) nên bạn có thể tập 4-5 lần/tuần nếu muốn, không cần nghỉ 48-72h như tay/chân/lưng. Lưu ý: muốn lộ 6 múi vẫn cần chế độ ăn thâm hụt calo — tập bụng chỉ làm cơ săn chắc/dày lên, không tự đốt mỡ riêng vùng đó (giảm mỡ toàn thân mới lộ cơ). Tin vui: cơ bụng càng dày (nhờ tăng tải dần) thì khi hóp bụng/gồng lên, các múi càng nổi rõ hơn dù chưa giảm hết mỡ. Đã rút còn 4 bài cốt lõi và tăng set — set cuối mỗi bài nên tập đến gần thất bại để bù lại việc ít bài hơn.",
+  { id:7, key:"bung", short:"Bụng", icon:"🔥", title:"Bụng — 6 múi + Core toàn diện (tại nhà)", focus:"Abs · 5 bài (4 chính + 1 bổ sung với con lăn bụng) — gập trên, gập dưới, chống xoay, chống ưỡn, rollout",
+    footer:"Bài ưu tiên hàng đầu của bạn. Bụng hồi phục nhanh hơn hẳn các nhóm cơ khác (ít tổn thương vi mô) nên bạn có thể tập 4-5 lần/tuần nếu muốn, không cần nghỉ 48-72h như tay/chân/lưng. Lưu ý: muốn lộ 6 múi vẫn cần chế độ ăn thâm hụt calo — tập bụng chỉ làm cơ săn chắc/dày lên, không tự đốt mỡ riêng vùng đó (giảm mỡ toàn thân mới lộ cơ). Tin vui: cơ bụng càng dày (nhờ tăng tải dần) thì khi hóp bụng/gồng lên, các múi càng nổi rõ hơn dù chưa giảm hết mỡ. Đã thêm con lăn bụng (ab wheel) đôi bánh bạn có sẵn — đây là một trong những bài core hiệu quả nhất vì buộc toàn bộ chuỗi core (bụng + lưng dưới + vai) chống lại lực ưỡn khi lăn ra xa. Set cuối mỗi bài nên tập đến gần thất bại.",
     exercises:[
       {name:"Gập bụng tiêu chuẩn (Standard Crunch)", en:"standard crunch abs", reps:"15-20", sets:5, equip:"Tự trọng", note:"Bài chính — gập bụng trên. Gập từ hông, giữ cằm cách ngực một nắm tay, siết bụng trên."},
       {name:"Nâng chân nằm sàn (Lying Leg Raise)", en:"lying leg raise abs", reps:"12-15, đến gần thất bại", sets:5, equip:"Tự trọng", note:"Bài chính — gập bụng dưới. Hạ chân chậm, lưng dưới luôn áp sàn, không võng lưng. Nếu quá dễ, hạ chậm hơn (4-5 giây) hoặc kẹp một vật nhẹ giữa hai chân để tăng tải."},
       {name:"Dead Bug (Dead Bug)", en:"dead bug exercise core", reps:"10-12/bên", sets:4, equip:"Tự trọng", note:"Chống ưỡn + chống xoay — nằm ngửa, duỗi tay/chân đối diện xuống gần sàn, ép chặt lưng dưới xuống sàn suốt bài. Nền tảng ổn định cột sống khi tập nặng."},
       {name:"Plank tiêu chuẩn giữ (Standard Plank)", en:"standard plank hold", reps:"Giữ 40-60s", sets:4, equip:"Tự trọng", note:"Chống ưỡn (anti-extension) — thân thẳng hàng từ đầu đến gót, siết bụng liên tục suốt hiệp."},
+      {name:"Con lăn bụng quỳ (Kneeling Ab Wheel Rollout)", en:"kneeling ab wheel rollout", reps:"8-12, đến gần thất bại", sets:3, equip:"Con lăn bụng", note:"Bài bổ sung (không tính vào 4 bài chính) — quỳ gối, lăn con lăn thẳng ra trước hết mức kiểm soát được rồi kéo về, siết bụng để lưng dưới KHÔNG võng xuống. Vì bạn cong vẹo cột sống, chỉ lăn ra đến mức còn giữ được lưng thẳng — thà biên độ ngắn mà kiểm soát tốt còn hơn lăn xa mà võng lưng. Nếu mới tập, chỉ lăn ra ~30-40% biên độ rồi tăng dần qua các tuần."},
     ]},
-  { id:1, key:"tay", short:"Tay", icon:"💪", title:"Tay — Tay trước + Tay sau (tại nhà)", focus:"Biceps & Triceps · 4 bài (2 tay trước, 2 tay sau), tự trọng + xà đơn thay tạ",
-    footer:"Không có tạ rời cho tay: dùng nhịp độ chậm và giữ đẳng trường để tăng độ khó thay vì tăng cân nặng.",
+  { id:1, key:"tay", short:"Tay", icon:"💪", title:"Tay — Tay trước + Tay sau (tại nhà)", focus:"Biceps & Triceps · 4 bài (2 tay trước, 2 tay sau), tự trọng + xà đơn + bàn chống đẩy đa năng thay tạ",
+    footer:"Không có tạ rời cho tay: dùng nhịp độ chậm và giữ đẳng trường để tăng độ khó thay vì tăng cân nặng. Bàn chống đẩy đa năng của bạn có các tay cầm ở nhiều vị trí/góc khác nhau (nhóm màu TRICEPS/CHEST) — dùng tay cầm hẹp sát nhau thay cho việc chụm tay xuống sàn để đỡ mỏi cổ tay hơn khi làm Diamond Push-up.",
     exercises:[
-      {name:"Hít đất kim cương (Diamond Push-up)", en:"diamond push up", reps:"Tối đa rep sạch (gần thất bại)", sets:5, equip:"Tự trọng / +balo", note:"Bài chính — hai bàn tay chụm hình kim cương dưới ngực, nhắm tay sau. Làm đến gần thất bại (còn 1-2 rep là kiệt sức). Nếu bạn vượt quá 20 rep một cách dễ dàng, đó là dấu hiệu cần tăng độ khó — không phải làm nhiều rep hơn nữa: đeo balo có sách/tạ đĩa sau lưng, hoặc nâng chân lên ghế (feet-elevated) để tăng tải."},
+      {name:"Hít đất kim cương (Diamond Push-up)", en:"diamond push up", reps:"Tối đa rep sạch (gần thất bại)", sets:5, equip:"Tự trọng / bàn chống đẩy / +balo", note:"Bài chính — hai bàn tay chụm hình kim cương dưới ngực (hoặc dùng tay cầm hẹp trên bàn chống đẩy để đỡ mỏi cổ tay), nhắm tay sau. Làm đến gần thất bại (còn 1-2 rep là kiệt sức). Nếu bạn vượt quá 20 rep một cách dễ dàng, đó là dấu hiệu cần tăng độ khó — không phải làm nhiều rep hơn nữa: đeo balo có sách/tạ đĩa sau lưng, hoặc nâng chân lên ghế (feet-elevated) để tăng tải."},
       {name:"Kéo xà cầm ngược — Chin-up", en:"chin up close grip", reps:"Tối đa rep sạch x4", sets:5, equip:"Xà đơn", note:"Bài chính tay trước — cầm sấp ngược, hẹp vai — nhắm tay trước nhiều hơn kéo xà thường."},
       {name:"Dips ghế (Chair/Bench Dip)", en:"bench dip tricep", reps:"Tối đa rep sạch (gần thất bại)", sets:4, equip:"Ghế/bàn +tạ nếu cần", note:"Gót chân đặt xa để tăng khó, hạ khuỷu vuông góc rồi đẩy lên. Nếu vượt quá ~20 rep dễ dàng, đặt đĩa tạ/balo lên đùi để tăng tải thay vì làm nhiều rep hơn."},
       {name:"Cuốn tay trước đẳng trường với balo (Static Curl Hold)", en:"isometric bicep curl hold", reps:"Giữ 25-30s", sets:4, equip:"Balo/túi nặng", note:"Giữ khuỷu 90 độ có tải, căng cơ liên tục không nghỉ giữa hiệp."},
     ]},
   { id:2, key:"vai", short:"Vai", icon:"🏔️", title:"Vai — Toàn diện (tại nhà)", focus:"Shoulders · 4 bài phủ trước – giữa – sau + traps, Pike push-up thay overhead press",
+    footer:"Tay cầm nhóm SHOULDERS (vàng) trên bàn chống đẩy của bạn cao hơn mặt sàn — đặt hai tay lên đó khi làm Pike Push-up để tăng độ nghiêng (giống Pike Push-up chân cao/tay thấp), tăng tải lên vai nhiều hơn làm dưới sàn phẳng khi bài trở nên dễ.",
     exercises:[
-      {name:"Hít đất trồng chuối (Pike Push-up)", en:"pike push up shoulder", reps:"8-10", sets:5, equip:"Tự trọng", note:"Bài chính — mông đẩy cao, hạ đầu xuống gần sàn giữa hai tay. Nhắm vai trước + tổng thể."},
+      {name:"Hít đất trồng chuối (Pike Push-up)", en:"pike push up shoulder", reps:"8-10", sets:5, equip:"Tự trọng / bàn chống đẩy", note:"Bài chính — mông đẩy cao, hạ đầu xuống gần sàn (hoặc xuống giữa hai tay cầm SHOULDERS trên bàn chống đẩy để tăng biên độ). Nhắm vai trước + tổng thể."},
       {name:"Nâng vai ngang với chai nước/túi (Lateral Raise)", en:"lateral raise water bottle", reps:"15", sets:5, equip:"Chai nước/túi", note:"Đầu vai giữa — nâng hai tay ngang vai, hạ chậm có kiểm soát."},
       {name:"Superman nâng vai sau (Superman Rear Delt Raise)", en:"superman rear delt raise", reps:"15", sets:4, equip:"Tự trọng", note:"Đầu vai sau — nằm sấp, nâng ngực và tay dang ngang lên khỏi sàn."},
       {name:"Shrug balo (Backpack Shrug)", en:"backpack shrug traps", reps:"15", sets:4, equip:"Balo/túi nặng", note:"Traps — đeo balo nặng sau lưng hoặc cầm hai bên, nhấc vai thẳng lên (không xoay tròn), giữ đỉnh 1 giây."},
@@ -445,7 +561,7 @@ const HOME_MUSCLES = [
       {name:"Kegel siết-giữ (Kegel Hold)", en:"kegel exercise pelvic floor male", reps:"12-15 lần, giữ 5s mỗi lần", sets:3, equip:"Không cần thiết bị", note:"Bài phụ riêng (không tính vào 4 bài chính) — siết cơ sàn chậu (như đang cố nhịn giữa dòng khi đi tiểu) trong 5 giây rồi thả lỏng 5 giây, lặp lại. Chỉ mất vài phút, làm ở bất cứ tư thế nào, không ai nhận ra. Tăng sức bền và khả năng kiểm soát khi quan hệ."},
     ]},
   { id:5, key:"lung", short:"Lưng", icon:"🔺", title:"Lưng — Độ rộng + độ dày (tại nhà)", focus:"Back · Xà đơn + con lăn bụng thay deadlift/barbell row, cộng sức bật kéo",
-    footer:"Không có deadlift: Superman và các bài core đẳng trường gánh vai trò giữ lưng dưới khoẻ.",
+    footer:"Không có deadlift: Superman và các bài core đẳng trường gánh vai trò giữ lưng dưới khoẻ. Nếu bàn chống đẩy đa năng của bạn có kèm dây kháng lực cho chức năng WALL PULLEY, bạn có thể gắn dây vào điểm cố định cao (cửa/lan can), kéo về phía bụng dưới hai tay cùng lúc để mô phỏng Seated Cable Row — dùng thay hoặc xen kẽ với bài chèo khăn bên dưới.",
     exercises:[
       {name:"Kéo xà tay rộng — biên độ đầy đủ (Full-ROM Wide-Grip Pull-up)", en:"wide grip pull up full range", reps:"Tối đa rep sạch x5", sets:5, equip:"Xà đơn", note:"Bài chính — làm nhiều set hơn để bù cường độ, nghỉ đủ 2 phút giữa set. Làm đầu tiên khi tay/lưng còn tươi nhất."},
       {name:"Chèo ngang thân bằng khăn trên xà (Towel Bodyweight Row)", en:"inverted row towel bodyweight", reps:"10-12", sets:5, equip:"Xà đơn", note:"Nằm dưới kéo ngực lên — mô phỏng barbell row, nhắm lưng giữa dày."},
@@ -453,11 +569,12 @@ const HOME_MUSCLES = [
       {name:"Chèo khăn một tay (Single-Arm Towel Row)", en:"single arm towel row bodyweight", reps:"10-12/bên", sets:4, equip:"Xà đơn/khăn", note:"Biến thể cô lập từng bên của bài chèo khăn — kéo cơ thể lên bằng một tay, tay còn lại thả lỏng hoặc hỗ trợ nhẹ."},
     ]},
   { id:6, key:"nguc", short:"Ngực", icon:"🛡️", title:"Ngực — Trên, giữa, dưới (tại nhà)", focus:"Chest · 4 bài — hít đất chính, tay rộng cho ngực ngoài, chân cao cho ngực trên, dip cho ngực dưới",
+    footer:"Tay cầm nhóm CHEST (xanh dương) trên bàn chống đẩy đa năng nâng người cao hơn mặt sàn — hạ được sâu hơn hẳn hít đất tay chạm sàn thường, kéo giãn ngực nhiều hơn ở đáy chuyển động. Dùng cho cả Standard Push-up và Wide Push-up khi muốn tăng biên độ mà chưa cần đeo balo.",
     exercises:[
-      {name:"Hít đất tiêu chuẩn (Standard Push-up)", en:"standard push up chest", reps:"Tối đa rep sạch x4", sets:5, equip:"Tự trọng", note:"Bài chính — thân thẳng hàng, hạ ngực gần chạm sàn."},
+      {name:"Hít đất tiêu chuẩn (Standard Push-up)", en:"standard push up chest", reps:"Tối đa rep sạch x4", sets:5, equip:"Tự trọng / bàn chống đẩy", note:"Bài chính — thân thẳng hàng, hạ ngực gần chạm sàn (hoặc dùng tay cầm CHEST trên bàn chống đẩy để hạ sâu hơn, tăng biên độ)."},
       {name:"Hít đất chân cao — Decline Push-up", en:"decline push up chest", reps:"Tối đa rep sạch (gần thất bại)", sets:4, equip:"Ghế/giường +balo", note:"Chân gác lên ghế — tăng tải lên ngực trên. Đeo balo có sách khi vượt quá ~20 rep dễ dàng."},
       {name:"Dips ghế nghiêng người (Lean-Forward Chair Dip)", en:"chest dip chair lean forward", reps:"Tối đa rep sạch (gần thất bại)", sets:4, equip:"Ghế/bàn +tạ", note:"Ngả người ra trước nhiều để nhấn vào ngực dưới thay vì tay sau. Đặt đĩa tạ lên đùi khi bài trở nên dễ."},
-      {name:"Hít đất tay rộng (Wide Push-up)", en:"wide grip push up chest", reps:"Tối đa rep sạch (gần thất bại)", sets:4, equip:"Tự trọng +balo", note:"Tay đặt rộng hơn vai — nhắm ngực ngoài. Đeo balo có sách khi vượt quá ~20 rep dễ dàng."},
+      {name:"Hít đất tay rộng (Wide Push-up)", en:"wide grip push up chest", reps:"Tối đa rep sạch (gần thất bại)", sets:4, equip:"Tự trọng / bàn chống đẩy +balo", note:"Tay đặt rộng hơn vai (dùng cặp tay cầm ngoài cùng nhóm CHEST trên bàn chống đẩy nếu muốn) — nhắm ngực ngoài. Đeo balo có sách khi vượt quá ~20 rep dễ dàng."},
     ]},
 ];
 
@@ -507,6 +624,8 @@ let currentDate = new Date();
 let currentMode = 'gym'; // 'gym' | 'home'
 let selectedMuscleId = null; // muscle group chosen for currentDate+mode
 let checks = {}; // { exerciseIndex: bool }
+let weightRanges = {}; // { exerciseIndex: {min:'', max:''} } — persists across days (not daily), per mode+muscle
+let challenges = []; // [{id, name, target, entries:[{amt, time}]}] — persists per date
 let storageOk = true; // set false if a self-test roundtrip fails
 const TODAY_STR = toDateStr(new Date());
 
@@ -529,6 +648,10 @@ const modeHintEl = el('#modeHint');
 const storageBannerEl = el('#storageBanner');
 const principlesBannerEl = el('#principlesBanner');
 const principlesCloseEl = el('#principlesClose');
+const challengeListEl = el('#challengeList');
+const challengeNameInput = el('#challengeNameInput');
+const challengeTargetInput = el('#challengeTargetInput');
+const addChallengeBtn = el('#addChallengeBtn');
 
 function activeMuscles(){ return PROGRAMS[currentMode]; }
 
@@ -592,6 +715,11 @@ async function testStorage(){
 function modeKey(dateStr){ return `mode:${dateStr}`; }
 function checksKey(mode, dateStr, muscleId){ return `checks:${mode}:${dateStr}:${muscleId}`; }
 function musclePickKey(mode, dateStr){ return `musclepick:${mode}:${dateStr}`; }
+// Weight range is a running "current working weight" note per exercise, not tied to a
+// specific day — it should stay the same when you flip between dates, only changing when
+// you actually update your min/max tạ for that exercise.
+function weightKey(mode, muscleId){ return `weights:${mode}:${muscleId}`; }
+function challengesKey(dateStr){ return `challenges:${dateStr}`; }
 
 /* ---------------- Principles banner dismiss (persisted) ---------------- */
 principlesCloseEl.addEventListener('click', async () => {
@@ -609,7 +737,7 @@ const MODE_LABELS = { gym: 'Phòng gym', ppl: 'Đẩy/Kéo/Chân', home: 'Ở nh
 const MODE_HINTS = {
   gym: 'Full thiết bị phòng tập — chia theo từng nhóm cơ',
   ppl: 'Full thiết bị phòng tập — gộp theo Đẩy / Kéo / Chân, ít buổi hơn mỗi tuần',
-  home: 'Chỉ xà đơn + tự trọng + đồ có sẵn ở nhà',
+  home: 'Xà đơn khung cửa + con lăn bụng + bàn chống đẩy đa năng + tự trọng',
 };
 
 function renderModeToggle(){
@@ -632,6 +760,8 @@ async function switchMode(newMode){
   renderTabs();
   const saved = await safeGet(checksKey(currentMode, dateStr, selectedMuscleId));
   checks = saved ? JSON.parse(saved) : {};
+  const savedWeights = await safeGet(weightKey(currentMode, selectedMuscleId));
+  weightRanges = savedWeights ? JSON.parse(savedWeights) : {};
   loadingMsgEl.style.display = 'none';
   renderDay();
   renderTabDoneMarks();
@@ -670,6 +800,7 @@ function renderDay(){
     const metaBits = [];
     if(ex.sets) metaBits.push(`${ex.sets} set`);
     if(ex.reps) metaBits.push(`${ex.reps} rep`);
+    const wr = weightRanges[idx] || {};
     li.innerHTML = `
       <div class="chk" data-idx="${idx}" role="checkbox" aria-checked="${!!checks[idx]}" tabindex="0">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7L5.5 10.5L12 3" stroke="#12151A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -682,6 +813,18 @@ function renderDay(){
         </div>
         <div class="ex-meta">${metaBits.map(m=>`<span>${m}</span>`).join('')}</div>
         <div class="ex-note">${ex.note}</div>
+        <div class="ex-weight">
+          <div class="w-field min">
+            <label>Tạ nhẹ nhất</label>
+            <input type="number" inputmode="decimal" min="0" step="0.5" placeholder="—" class="w-min" data-idx="${idx}" value="${wr.min ?? ''}">
+            <span class="unit">kg</span>
+          </div>
+          <div class="w-field max">
+            <label>Tạ nặng nhất</label>
+            <input type="number" inputmode="decimal" min="0" step="0.5" placeholder="—" class="w-max" data-idx="${idx}" value="${wr.max ?? ''}">
+            <span class="unit">kg</span>
+          </div>
+        </div>
         <a class="ex-link" href="${ytLink(ex.en)}" target="_blank" rel="noopener">▶ Xem video hướng dẫn</a>
       </div>
     `;
@@ -694,7 +837,24 @@ function renderDay(){
     chk.addEventListener('keydown', (e) => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); handler(); } });
   });
 
+  exListEl.querySelectorAll('.w-min, .w-max').forEach(inp => {
+    inp.addEventListener('change', () => saveWeightField(inp));
+    inp.addEventListener('blur', () => saveWeightField(inp));
+  });
+
   updateProgress();
+}
+
+async function saveWeightField(inp){
+  const idx = parseInt(inp.dataset.idx, 10);
+  const isMin = inp.classList.contains('w-min');
+  const raw = inp.value.trim();
+  if(!weightRanges[idx]) weightRanges[idx] = {};
+  weightRanges[idx][isMin ? 'min' : 'max'] = raw;
+  const mode = currentMode;
+  const muscleId = selectedMuscleId;
+  const snapshot = JSON.stringify(weightRanges);
+  await queueWrite(() => safeSet(weightKey(mode, muscleId), snapshot));
 }
 
 function updateProgress(){
@@ -728,6 +888,8 @@ async function selectMuscle(muscleId){
   await saveChain;
   const saved = await safeGet(checksKey(currentMode, dateStr, muscleId));
   checks = saved ? JSON.parse(saved) : {};
+  const savedWeights = await safeGet(weightKey(currentMode, muscleId));
+  weightRanges = savedWeights ? JSON.parse(savedWeights) : {};
   await queueWrite(() => safeSet(musclePickKey(currentMode, dateStr), String(muscleId)));
   loadingMsgEl.style.display = 'none';
   renderDay();
@@ -748,9 +910,14 @@ async function goToDate(newDate){
   renderTabs();
   const saved = await safeGet(checksKey(currentMode, dateStr, selectedMuscleId));
   checks = saved ? JSON.parse(saved) : {};
+  const savedWeights = await safeGet(weightKey(currentMode, selectedMuscleId));
+  weightRanges = savedWeights ? JSON.parse(savedWeights) : {};
+  const savedChallenges = await safeGet(challengesKey(dateStr));
+  challenges = savedChallenges ? JSON.parse(savedChallenges) : [];
   loadingMsgEl.style.display = 'none';
   renderDay();
   renderTabDoneMarks();
+  renderChallenges();
 }
 
 async function renderTabDoneMarks(){
@@ -837,6 +1004,131 @@ async function renderStrip(){
   }
   streakLabelEl.textContent = `🔥 ${streak} ngày liên tiếp`;
 }
+
+/* ---------------- Rep challenge (thử thách hôm nay) ----------------
+   Lets you set a big daily goal (e.g. push-up 1000, squat 1000) and log
+   each set as you go through the day, so you never have to hold the
+   running total in your head. Stored per calendar date, same as the
+   workout checks, so flipping to a past day shows that day's challenges. */
+function newChallengeId(){ return 'c' + Date.now() + Math.floor(Math.random()*1000); }
+
+async function saveChallenges(){
+  const dateStr = toDateStr(currentDate);
+  const snapshot = JSON.stringify(challenges);
+  await queueWrite(() => safeSet(challengesKey(dateStr), snapshot));
+}
+
+async function addChallenge(name, target){
+  challenges.push({ id: newChallengeId(), name, target, entries: [] });
+  renderChallenges();
+  await saveChallenges();
+}
+
+async function addEntry(challengeId, amount){
+  if(!amount || amount <= 0) return;
+  const c = challenges.find(x => x.id === challengeId);
+  if(!c) return;
+  c.entries.push({ amt: amount, time: new Date().toISOString() });
+  renderChallenges();
+  await saveChallenges();
+}
+
+async function undoLastEntry(challengeId){
+  const c = challenges.find(x => x.id === challengeId);
+  if(!c || !c.entries.length) return;
+  c.entries.pop();
+  renderChallenges();
+  await saveChallenges();
+}
+
+async function deleteChallenge(challengeId){
+  challenges = challenges.filter(x => x.id !== challengeId);
+  renderChallenges();
+  await saveChallenges();
+}
+
+function challengeTotal(c){ return c.entries.reduce((s,e) => s + e.amt, 0); }
+
+function renderChallenges(){
+  challengeListEl.innerHTML = '';
+  if(!challenges.length){
+    const empty = document.createElement('div');
+    empty.className = 'challenge-empty';
+    empty.textContent = 'Chưa có mục tiêu nào cho hôm nay — tạo một mục tiêu bên dưới (VD: Hít đất, mục tiêu 1000).';
+    challengeListEl.appendChild(empty);
+    return;
+  }
+  challenges.forEach(c => {
+    const total = challengeTotal(c);
+    const pct = c.target > 0 ? Math.min(100, (total/c.target)*100) : 0;
+    const over = total >= c.target;
+    const card = document.createElement('div');
+    card.className = 'challenge-card';
+    card.innerHTML = `
+      <div class="challenge-card-head">
+        <span class="challenge-name"><span class="icon">${over ? '✅' : '🏁'}</span>${c.name}</span>
+        <button class="challenge-del" data-id="${c.id}" title="Xoá mục tiêu này">✕</button>
+      </div>
+      <div class="challenge-progress-row">
+        <div class="challenge-progress-bar"><div class="challenge-progress-fill${over ? ' over' : ''}" style="width:${pct}%"></div></div>
+        <span class="challenge-progress-num"><b>${total}</b> / ${c.target}</span>
+      </div>
+      <div class="challenge-quickadd">
+        <button class="qa-btn" data-id="${c.id}" data-amt="5">+5</button>
+        <button class="qa-btn" data-id="${c.id}" data-amt="10">+10</button>
+        <button class="qa-btn" data-id="${c.id}" data-amt="20">+20</button>
+        <button class="qa-btn" data-id="${c.id}" data-amt="50">+50</button>
+        <span class="qa-custom">
+          <input type="number" min="1" step="1" placeholder="Số khác" class="qa-custom-input" data-id="${c.id}">
+          <button class="qa-custom-btn" data-id="${c.id}">Cộng</button>
+        </span>
+        ${c.entries.length ? `<button class="log-undo" data-id="${c.id}">↺ Bỏ set cuối</button>` : ''}
+      </div>
+      <div class="challenge-log">
+        ${c.entries.map(e => `<span class="log-chip">+${e.amt}</span>`).join('')}
+      </div>
+    `;
+    challengeListEl.appendChild(card);
+  });
+
+  challengeListEl.querySelectorAll('.qa-btn').forEach(btn => {
+    btn.addEventListener('click', () => addEntry(btn.dataset.id, parseInt(btn.dataset.amt, 10)));
+  });
+  challengeListEl.querySelectorAll('.qa-custom-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const input = challengeListEl.querySelector(`.qa-custom-input[data-id="${btn.dataset.id}"]`);
+      const val = parseInt(input.value, 10);
+      if(val > 0){ addEntry(btn.dataset.id, val); input.value = ''; }
+    });
+  });
+  challengeListEl.querySelectorAll('.qa-custom-input').forEach(input => {
+    input.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter'){
+        const val = parseInt(input.value, 10);
+        if(val > 0){ addEntry(input.dataset.id, val); input.value = ''; }
+      }
+    });
+  });
+  challengeListEl.querySelectorAll('.log-undo').forEach(btn => {
+    btn.addEventListener('click', () => undoLastEntry(btn.dataset.id));
+  });
+  challengeListEl.querySelectorAll('.challenge-del').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if(confirm('Xoá mục tiêu này và toàn bộ log của nó?')) deleteChallenge(btn.dataset.id);
+    });
+  });
+}
+
+addChallengeBtn.addEventListener('click', () => {
+  const name = challengeNameInput.value.trim();
+  const target = parseInt(challengeTargetInput.value, 10);
+  if(!name || !target || target <= 0) return;
+  addChallenge(name, target);
+  challengeNameInput.value = '';
+  challengeTargetInput.value = '';
+});
+challengeNameInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') addChallengeBtn.click(); });
+challengeTargetInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') addChallengeBtn.click(); });
 
 /* ---------------- Init ---------------- */
 (async function init(){
