@@ -362,7 +362,7 @@
       <p class="brand-eyebrow">Nhật ký buổi tập · Theo nhóm cơ</p>
       <h1>Sổ Tập Của Bạn</h1>
     </div>
-    <div class="stat-pill">1m68 · 67kg · BMI <b>23.7</b></div>
+    <div class="stat-pill">1m68 · 65kg · BMI <b>23.0</b></div>
   </header>
 
   <div class="storage-banner" id="storageBanner">
@@ -383,6 +383,7 @@
         <li><b>Tần suất:</b> mỗi nhóm cơ nên được tập lại ít nhất 1 lần/tuần — cố gắng đừng để một nhóm nghỉ quá 8-9 ngày liên tục.</li>
         <li><b>Bài tự trọng dễ quá:</b> nếu một bài không tạ (hít đất, lunge, split squat...) bạn làm dễ dàng quá 20 rep, đó là dấu hiệu cần tăng tải (balo sách, đĩa tạ, chậm nhịp độ) — không phải làm thêm rep. Rep cao vô hạn sẽ biến bài tăng cơ thành bài sức bền, hiệu quả tăng cơ giảm hẳn.</li>
         <li><b>Bài <span class="badge power" style="display:inline">THỂ LỰC</span> (sức bật/tim mạch):</b> luôn đặt CUỐI buổi, sau khi đã xong hết các bài tạ chính. Mục tiêu số 1 của bạn là cơ bắp to & nét như vận động viên thể hình, không phải thi đấu sức bật — nên cơ phải còn 100% tươi cho bài tạ nặng đầu buổi (đó mới là thứ xây cơ), còn bài thể lực chỉ là finisher bơm máu, đốt mỡ, tăng sức bền tim mạch ở cuối, không được phép làm trước và lấy mất sức của các bài chính.</li>
+        <li><b>Cardio đốt mỡ (giai đoạn cắt hiện tại):</b> đi bộ dốc máy chạy bộ 15-18%, tốc độ 5-6km/h, 60 phút — bài cardio low-impact rất tốt cho cột sống cong vẹo (không có lực dội như chạy bộ), vẫn đốt đủ calo để giảm mỡ. Luôn làm SAU khi tập tạ xong (không làm trước, sẽ mất sức cho bài chính). 3-5 buổi/tuần tuỳ mức thâm hụt calo cần thiết.</li>
       </ul>
     </span>
     <button class="principles-close" id="principlesClose" aria-label="Đóng" title="Ẩn ghi chú này">✕</button>
@@ -479,9 +480,9 @@ const GYM_MUSCLES = [
     footer:"TechnoGym Shoulder Press có lưng tựa cố định — an toàn hơn nhiều so với đứng đẩy tạ đòn trên đầu (dễ ưỡn lưng dưới không đều nếu cột sống cong vẹo). Với các bài cáp một bên, luôn làm số set/rep bằng nhau tuyệt đối hai bên.",
     exercises:[
       {name:"Đẩy vai máy TechnoGym (TechnoGym Shoulder Press Machine)", en:"technogym shoulder press machine", reps:"8-10", sets:4, note:"Bài chính — máy có lưng tựa cố định, quỹ đạo cả hai tay đối xứng, an toàn hơn barbell OHP nhiều cho người có vấn đề cột sống. Đẩy hết tay, không khoá khớp khuỷu hoàn toàn ở đỉnh."},
-      {name:"Nâng tạ ngang vai trên cáp (Cable Lateral Raise)", en:"cable lateral raise shoulder", reps:"12-15/bên", sets:4, note:"Đầu vai giữa — đứng cạnh dàn cáp, pulley thấp, nâng từng bên một, đếm rep bằng nhau tuyệt đối hai bên."},
+      {name:"Nâng tạ ngang vai trên cáp (Cable Lateral Raise)", en:"cable lateral raise shoulder", reps:"12-15/bên", sets:5, note:"Đầu vai giữa — vai dễ bị thiếu tải nhất trong 3 đầu delt nên tăng lên 5 set. Đứng cạnh dàn cáp, pulley thấp, nâng từng bên một, đếm rep bằng nhau tuyệt đối hai bên."},
       {name:"Chim xoè cáp mặt (Cable Face Pull)", en:"cable face pull", reps:"15", sets:4, note:"Đầu vai sau + sức khoẻ khớp vai — kéo dây về phía mặt bằng hai tay cùng lúc, xoay ngoài vai ở cuối chuyển động."},
-      {name:"Nâng tạ trước trên cáp (Cable Front Raise)", en:"cable front raise shoulder", reps:"12/bên", sets:3, note:"Đầu vai trước — pulley thấp, nâng thẳng ra trước đến ngang vai, không đung đưa lưng dưới."},
+      {name:"Kéo giãn vai sau cáp chéo (Cable Reverse Fly / Bent-over Rear Delt Fly)", en:"cable reverse fly rear delt", reps:"12-15/bên", sets:4, note:"Đầu vai sau — thay cho Front Raise vì vai trước đã được kích hoạt đủ nhiều qua các bài đẩy (Shoulder Press, Chest Press). Đứng giữa dàn cáp chéo, cúi người nhẹ, kéo hai dây sang hai bên ra sau, siết bả vai ở cuối. Góc khác Face Pull (không kéo về mặt) nên kích hoạt vai sau nhiều hơn."},
     ]},
   { id:3, key:"chan", short:"Chân", icon:"🦵", title:"Chân — Đùi trước, đùi sau, bắp chân (ưu tiên máy)", focus:"Legs · 4 bài trên máy TechnoGym Leg Press/Leg Curl — thay squat/deadlift tạ đòn để giảm tải trục lên cột sống",
     footer:"Leg Press có lưng tựa cố định nên tải trọng không dồn thẳng lên cột sống như Squat/Deadlift tạ đòn — đây là lựa chọn an toàn hơn nhiều cho người cong vẹo cột sống bẩm sinh mà vẫn xây cơ chân hiệu quả tương đương.",
@@ -540,11 +541,12 @@ const HOME_MUSCLES = [
     footer:"Tay cầm nhóm SHOULDERS (vàng) trên bàn chống đẩy của bạn cao hơn mặt sàn — đặt hai tay lên đó khi làm Pike Push-up để tăng độ nghiêng (giống Pike Push-up chân cao/tay thấp), tăng tải lên vai nhiều hơn làm dưới sàn phẳng khi bài trở nên dễ.",
     exercises:[
       {name:"Hít đất trồng chuối (Pike Push-up)", en:"pike push up shoulder", reps:"8-10", sets:5, equip:"Tự trọng / bàn chống đẩy", note:"Bài chính — mông đẩy cao, hạ đầu xuống gần sàn (hoặc xuống giữa hai tay cầm SHOULDERS trên bàn chống đẩy để tăng biên độ). Nhắm vai trước + tổng thể."},
-      {name:"Nâng vai ngang với chai nước/túi (Lateral Raise)", en:"lateral raise water bottle", reps:"15", sets:5, equip:"Chai nước/túi", note:"Đầu vai giữa — nâng hai tay ngang vai, hạ chậm có kiểm soát."},
-      {name:"Superman nâng vai sau (Superman Rear Delt Raise)", en:"superman rear delt raise", reps:"15", sets:4, equip:"Tự trọng", note:"Đầu vai sau — nằm sấp, nâng ngực và tay dang ngang lên khỏi sàn."},
+      {name:"Nâng vai ngang với tạ tay tự chế (Lateral Raise)", en:"lateral raise improvised weight", reps:"15, đến gần thất bại", sets:5, equip:"Chai nước/túi nhỏ có quai", note:"Đầu vai giữa — nâng hai tay ngang vai, hạ chậm có kiểm soát. Chai nước chỉ nặng cố định nên sẽ sớm hết tác dụng: khi 15 rep trở nên dễ, đổi sang túi/balo nhỏ đổ thêm gạo/sách để tăng cân nặng dần, giữ nguyên tắc tăng tải."},
+      {name:"Superman nâng vai sau (Superman Rear Delt Raise)", en:"superman rear delt raise", reps:"15, đến gần thất bại", sets:4, equip:"Tự trọng", note:"Đầu vai sau — nằm sấp, nâng ngực và tay dang ngang lên khỏi sàn. Khi 15 rep dễ dàng, cầm chai nước/tạ nhẹ ở mỗi tay để tăng tải thay vì tập nhiều rep hơn."},
       {name:"Shrug balo (Backpack Shrug)", en:"backpack shrug traps", reps:"15", sets:4, equip:"Balo/túi nặng", note:"Traps — đeo balo nặng sau lưng hoặc cầm hai bên, nhấc vai thẳng lên (không xoay tròn), giữ đỉnh 1 giây."},
     ]},
   { id:3, key:"chan", short:"Chân", icon:"🦵", title:"Chân — Đùi + bắp chân (tại nhà)", focus:"Legs · 4 bài — squat hai chân, một chân, giữ đẳng trường, bắp chân",
+    footer:"Không có tạ đòn/máy Leg Press: Bulgarian Split Squat và Wall Sit gánh vai trò bài chính vì tải trọng dồn lên một chân, khó hơn squat hai chân nhiều dù không cần tạ nặng. Luôn ưu tiên tăng tải (balo sách, tạ đơn) trước khi tăng rep — rep quá cao (>20-25) sẽ biến bài tăng cơ thành bài sức bền.",
     exercises:[
       {name:"Squat tự trọng nhịp chậm (Tempo Bodyweight Squat)", en:"tempo bodyweight squat", reps:"15-20", sets:5, equip:"Tự trọng", note:"Bài chính — hạ chậm 4 giây, đứng lên nhanh — tăng thời gian chịu lực. Làm đầu tiên khi chân còn tươi nhất."},
       {name:"Bulgarian Split Squat tự trọng", en:"bulgarian split squat bodyweight", reps:"Tối đa rep sạch (gần thất bại)/chân", sets:5, equip:"Ghế/giường +balo/tạ", note:"Chân sau gác lên ghế, chậm nhịp độ để tăng khó. Đây là bài rất dễ tăng tải: cầm tạ đơn hai tay hoặc đeo balo có sách khi vượt quá ~15-20 rep/chân dễ dàng."},
